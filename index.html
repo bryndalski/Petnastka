@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spooktober</title>
+    <script src="script.js"></script>
+    <style>
+        .buttonContainer{
+            position: absolute;
+            left:50px;
+            top:10px;
+            display: flex;
+            width: 230px;
+            height:40px;
+            flex-direction: row;
+            justify-content: baseline;
+        }
+        .spooky_img{
+            width:230px;
+            height:230px;
+        }
+        button{
+            border: solid black 1px;
+            border-radius: 10px;
+            width: 70px;
+            height:30px;
+            background-color:orange;
+            color: black;
+            font-weight: bold;
+        }
+        .spookySlicer{
+            position: relative;
+            border: solid 10px orange;
+            width:640px;
+            height:590px;
+        }
+        canvas{
+            position: absolute;
+            border: solid 2px orange;
+        }
+    </style>
+</head>
+<body>
+    <img class="spooky_img"src="./Img/spooky_sceleton.jpg">
+    <div class="spookySlicer">
+    </div>
+
+</body>
+</html>
