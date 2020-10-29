@@ -1,50 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spooktober</title>
-    <script src="script.js"></script>
+    <script src="scriptjs_based_on_class.js"></script>
+    <!-- <script src="script.js"></script> -->
     <style>
-        .buttonContainer{
+        .buttonContainer {
             position: absolute;
-            left:50px;
-            top:10px;
+            left: 50px;
+            top: 10px;
             display: flex;
             width: 230px;
-            height:40px;
+            height: 40px;
             flex-direction: row;
             justify-content: baseline;
         }
-        .spooky_img{
-            width:230px;
-            height:230px;
+
+        .spooky_img {
+            width: 230px;
+            height: 230px;
         }
-        button{
+
+        button {
             border: solid black 1px;
             border-radius: 10px;
             width: 70px;
-            height:30px;
-            background-color:orange;
+            height: 30px;
+            background-color: orange;
             color: black;
             font-weight: bold;
         }
-        .spookySlicer{
+
+        .spookySlicer {
             position: relative;
             border: solid 10px orange;
-            width:640px;
-            height:590px;
+            width: 640px;
+            height: 590px;
         }
-        canvas{
+
+        canvas {
             position: absolute;
-            border: solid 2px orange;
+            /* border: solid 2px orange; */
+            transition: all 10s ease-in-out;
         }
     </style>
 </head>
+
 <body>
-    <img class="spooky_img"src="./Img/spooky_sceleton.jpg">
+    <img class="spooky_img" src="./Img/spooky_sceleton.jpg">
     <div class="spookySlicer">
     </div>
 
 </body>
+
 </html>

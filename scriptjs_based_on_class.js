@@ -211,7 +211,11 @@ function imageSlicer(i) {
         if (intervalCounter <= 0)
             clearInterval(playInterval)
     }, 1)
+    // setInterval(() => {
+    //     // intervalCounter--
+    //     // if (intervalCounter <= 0)
 
+    // }, 1);
 }
 function moverRanomizer(id, ilosc_poz) {
     picturesObjectArray[id].move(ilosc_poz)
