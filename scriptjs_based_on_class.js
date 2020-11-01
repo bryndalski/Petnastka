@@ -9,7 +9,7 @@
 // DZIEŃ DOBRY PANIE BRYNDALKU
 //KAWKA JUŻ BYŁA ?
 
-
+let ilosc_poz=0, picturesIdCheckArray=[];
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -31,9 +31,6 @@ class pictureStatistic {
         return 0;
     }
     moveMaker(i) {
-        console.log(this.imgPosition)
-        console.log(i)
-        console.log(picturesObjectArray[this.imgPosition + i])
         document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px"
         document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px"
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
@@ -53,20 +50,11 @@ class pictureStatistic {
         })
         document.getElementById(this.imgPosition + i).id = temporaryObject //Pusty 
         document.getElementById(this.imgPosition).id = temporaryId
-        console.log(picturesObjectArray)
+        arrayIdTaker()
+        winCheck()
     }
     moveMakerForWhteBlock(i) {
-        console.log("###CONSOLE LOGI DLA  MOVE MAKERA###############")
-        console.log(picturesObjectArray[this.imgPosition])
-        console.log(picturesObjectArray[this.imgPosition + i])
-        console.log(i)
-        console.log("############## LOGI DLA PRZEMIESZCZENIA DOCELOWEGO ")
-        console.log(picturesObjectArray[this.imgPosition + i].imgX)
-        console.log(picturesObjectArray[this.imgPosition + i].imgY)
 
-        console.log(this.imgPosition)
-        console.log(i)
-        console.log(picturesObjectArray[this.imgPosition + i])
         document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px"
         document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px"
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
@@ -87,7 +75,6 @@ class pictureStatistic {
         document.getElementById(this.imgPosition).id = temporaryId
         document.getElementById(this.imgPosition + i).id = temporaryObject //Pusty 
 
-        console.log(picturesObjectArray)
     }
     move(i) {
         switch (this.possibilities(i)) {
@@ -108,25 +95,19 @@ class pictureStatistic {
         }
     }
     whiteBoxMove(i) {
-        console.log("no ej")
         let possibilitiesArray = this.whiteBoxPossibilities(i)
         let szukany = Math.floor((Math.random() * (possibilitiesArray.length)))
-        console.log(possibilitiesArray)
         switch (possibilitiesArray[szukany]) {
             case 1: // lewo
-                console.log("Jeden")
                 this.moveMakerForWhteBlock(-1)
                 break;
             case 2: // w prawo
-                console.log("Dwa")
                 this.moveMakerForWhteBlock(1)
                 break;
             case 3:
-                console.log("Trzy")
                 this.moveMakerForWhteBlock(-i)
                 break;
             case 4:
-                console.log("Cztry")
                 this.moveMakerForWhteBlock(+i)
                 break;
         }
@@ -134,7 +115,6 @@ class pictureStatistic {
 
 
     whiteBoxPossibilities(i) {
-        console.log(i)
         let possibilitiesArray = []
         if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != (i - 1))   // lewo && (this.imgPosition-1)%i != 0 
             possibilitiesArray.push(1)
@@ -166,11 +146,25 @@ function buttonMaker() {
     }
     document.body.appendChild(buttonContainer)
 }
+//funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
+function restarter() {
+    picturesObjectArray = []
+    if (document.body.querySelector('.spookySlicer') != null)
+        document.body.querySelector('.spookySlicer').remove()
+    let spooksCont = document.createElement('div')
+    spooksCont.classList.add('spookySlicer')
+    document.body.appendChild(spooksCont)
+}
+// funckja wywołana, pozwala na acess po tzw I do ilość buttonó itp
 function buttonkoweSlicowanie(i) {
     return function () {
+        restarter()
         imageSlicer(i)
+        ilosc_poz = i;
+        document.querySelector('.spookySlicer').addEventListener('click', moverRanomizer)
     }
-}
+}   
+//funckja robiąca kwadrary 
 function imageSlicer(i) {
     let imageToSlice = new Image()   //tworze nowe img
     imageToSlice.src = './Img/spooky_sceleton.jpg' //nadaje mu nowy src
@@ -195,9 +189,9 @@ function imageSlicer(i) {
                 picturesObjectArray.push(new pictureStatistic("containsImagine", imageWidth * x, imageHeight * y, picturesCounter))
                 contextOfSliceableImage.drawImage(imageToSlice, (imageWidth * x), (imageHeight * y), imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
             }
-            imageCanvas.onclick = function () {
-                moverRanomizer(this.id, i)
-            }
+            // imageCanvas.onclick = function () {
+            //     moverRanomizer(this.id, i)
+            // }
             picturesCounter++;
             document.querySelector('.spookySlicer').appendChild(imageCanvas)
 
@@ -208,15 +202,44 @@ function imageSlicer(i) {
     let playInterval = setInterval(function () {
         intervalCounter--
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
-        if (intervalCounter <= 0)
+        if (intervalCounter <= 0){
             clearInterval(playInterval)
-    }, 1)
-    // setInterval(() => {
-    //     // intervalCounter--
-    //     // if (intervalCounter <= 0)
-
-    // }, 1);
+            arrayIdTaker()
+        }
+    }, 1,b=i)
 }
-function moverRanomizer(id, ilosc_poz) {
-    picturesObjectArray[id].move(ilosc_poz)
+function arrIdCheck() {
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+       if(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id!=picturesIdCheckArray[x]){
+        alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
+        window.location.reload(true)           
+        break;
+       }
+    } 
+}
+function arrayIdTaker(){
+    picturesIdCheckArray=[]
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+        picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
+    } 
+}
+
+function winCheck() {
+    let check = true;
+    //TODO metoda łatwa do ogrania 
+    for (x = 0; x < picturesObjectArray.length; x++) {
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
+            check = false
+            break;
+        }
+    }
+    if (check) {
+        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
+        alert("KONIEC")
+    }
+}
+function moverRanomizer(e) {
+    arrIdCheck()
+    winCheck()
+    picturesObjectArray[e.target.id].move(ilosc_poz)
 }

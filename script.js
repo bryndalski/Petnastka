@@ -8,7 +8,8 @@
 // WTEDY GRA ZAKOŃCZY SIĘ KIEDY TABLICA WRÓCI DO STANOU WYJŚCOWEGO CO SPORWADZA SIĘ DO PK.2 
 // DZIEŃ DOBRY PANIE BRYNDALKU
 //KAWKA JUŻ BYŁA ?
-
+//TODO dodaj warunek na nulla
+var picturesObjectArray = []
 
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
@@ -149,14 +150,23 @@ class pictureStatistic {
 }
 
 
-var picturesObjectArray = []
 window.addEventListener('DOMContentLoaded', (event) => {
     buttonMaker();
 });
 
 
+function restarter() {
+    picturesObjectArray = []
+    if (document.body.querySelector('.spookySlicer') != null)
+        document.body.querySelector('.spookySlicer').remove()
+    let spooksCont = document.createElement('div')
+    spooksCont.classList.add('spookySlicer')
+    document.body.appendChild(spooksCont)
+}
+
 function buttonMaker() {
-    let buttonContainer = document.createElement("button")
+    restarter()
+    let buttonContainer = document.createElement("div")
     buttonContainer.classList.add("buttonContainer")
     for (i = 3; i < 6; i++) {
         let buttonek = document.createElement('button')
@@ -168,6 +178,7 @@ function buttonMaker() {
 }
 function buttonkoweSlicowanie(i) {
     return function () {
+        restarter()
         imageSlicer(i)
     }
 }
