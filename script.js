@@ -1,16 +1,5 @@
-//TOTO OD BRYNDALA Z 27.10 Z 00:29 DO BRYNDALA PEWNIE RANO
-// GŁĄBIE ID BĘDZIE CI POTRZEBNE DO SPRAWDZANIA CZY DANE RZECZY SĄ NA SWOIM MIEJSCU . DASZ SOBIE NA TO FORA I BEDZIESZ SPRAWDZAŁ CZY I < OD WYMIAR^2 JEST RÓWNE ID JEŚLI TAK DASZ PRAWDE I KOCUR
-// TWOJA IMG POZYCJA TO ODPOWIEDNIK W TABLICY 
-// ZMIENIASZ WARTOŚĆ I PODMIENIASZ INDEXY
-// MIŁEGO WSTAWANIA 
-//DOBRA JEDNAK NIE MOŻESZ SOBIE ZMIAĆ NADAŃ JSONÓW ALE MOŻESZ PRZENOSIĆ I SWAPOWAĆ INDEXY W TABLICY CO TEŻ BĘDZIESZ ROBIŁ
-//PORÓWNÓJ ICH STATUSY I NA PODSTAWIE TEGO MOŻESZ WYLICZYĆ JAKIE MAJĄ WEKTOR
-// WTEDY GRA ZAKOŃCZY SIĘ KIEDY TABLICA WRÓCI DO STANOU WYJŚCOWEGO CO SPORWADZA SIĘ DO PK.2 
-// DZIEŃ DOBRY PANIE BRYNDALKU
-//KAWKA JUŻ BYŁA ?
-//TODO dodaj warunek na nulla
-var picturesObjectArray = []
-
+let picturesObjectArray = []
+let firstDate = 0;
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -132,8 +121,6 @@ class pictureStatistic {
                 break;
         }
     }
-
-
     whiteBoxPossibilities(i) {
         console.log(i)
         let possibilitiesArray = []
@@ -149,11 +136,10 @@ class pictureStatistic {
     }
 }
 
-
+// ładowanie skryptu 
 window.addEventListener('DOMContentLoaded', (event) => {
     buttonMaker();
 });
-
 
 function restarter() {
     picturesObjectArray = []
@@ -163,7 +149,6 @@ function restarter() {
     spooksCont.classList.add('spookySlicer')
     document.body.appendChild(spooksCont)
 }
-
 function buttonMaker() {
     restarter()
     let buttonContainer = document.createElement("div")
@@ -218,12 +203,28 @@ function imageSlicer(i) {
     let intervalCounter = i ** i
     let playInterval = setInterval(function () {
         intervalCounter--
+        console.log("KURDW")
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
-        if (intervalCounter <= 0)
+        if (intervalCounter <= 0) {
+            firstDate = Date.now()
+            console.log(firstDate)
+            let myItv = setInterval(clock, 100)
             clearInterval(playInterval)
+        }
     }, 1)
 
 }
 function moverRanomizer(id, ilosc_poz) {
     picturesObjectArray[id].move(ilosc_poz)
+}
+function clock() {
+    let newHour = Date.now() - firstDate
+    let hours = newHour.getHours()
+    let mins = newHour.getMinutes()
+    let seconds = newHour.getSeconds()
+    let millisec = newHour.getMilliseconds()
+    console.log("Godziny + " + hours)
+    console.log("minuty + " + hours)
+    console.log("sekundy + " + hours)
+    console.log("milisekundy + " + hours)
 }

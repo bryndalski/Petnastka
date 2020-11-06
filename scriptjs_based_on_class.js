@@ -1,15 +1,4 @@
-//TOTO OD BRYNDALA Z 27.10 Z 00:29 DO BRYNDALA PEWNIE RANO
-// GŁĄBIE ID BĘDZIE CI POTRZEBNE DO SPRAWDZANIA CZY DANE RZECZY SĄ NA SWOIM MIEJSCU . DASZ SOBIE NA TO FORA I BEDZIESZ SPRAWDZAŁ CZY I < OD WYMIAR^2 JEST RÓWNE ID JEŚLI TAK DASZ PRAWDE I KOCUR
-// TWOJA IMG POZYCJA TO ODPOWIEDNIK W TABLICY 
-// ZMIENIASZ WARTOŚĆ I PODMIENIASZ INDEXY
-// MIŁEGO WSTAWANIA 
-//DOBRA JEDNAK NIE MOŻESZ SOBIE ZMIAĆ NADAŃ JSONÓW ALE MOŻESZ PRZENOSIĆ I SWAPOWAĆ INDEXY W TABLICY CO TEŻ BĘDZIESZ ROBIŁ
-//PORÓWNÓJ ICH STATUSY I NA PODSTAWIE TEGO MOŻESZ WYLICZYĆ JAKIE MAJĄ WEKTOR
-// WTEDY GRA ZAKOŃCZY SIĘ KIEDY TABLICA WRÓCI DO STANOU WYJŚCOWEGO CO SPORWADZA SIĘ DO PK.2 
-// DZIEŃ DOBRY PANIE BRYNDALKU
-//KAWKA JUŻ BYŁA ?
-
-let ilosc_poz=0, picturesIdCheckArray=[];
+let ilosc_poz = 0, picturesIdCheckArray = [];
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -138,7 +127,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 function buttonMaker() {
     let buttonContainer = document.createElement("button")
     buttonContainer.classList.add("buttonContainer")
-    for (i = 3; i < 6; i++) {
+    for (i = 3; i <= 6; i++) {
         let buttonek = document.createElement('button')
         buttonek.appendChild(document.createTextNode(i + " X " + i))
         buttonek.onclick = buttonkoweSlicowanie(i);
@@ -163,7 +152,7 @@ function buttonkoweSlicowanie(i) {
         ilosc_poz = i;
         document.querySelector('.spookySlicer').addEventListener('click', moverRanomizer)
     }
-}   
+}
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
     let imageToSlice = new Image()   //tworze nowe img
@@ -189,9 +178,6 @@ function imageSlicer(i) {
                 picturesObjectArray.push(new pictureStatistic("containsImagine", imageWidth * x, imageHeight * y, picturesCounter))
                 contextOfSliceableImage.drawImage(imageToSlice, (imageWidth * x), (imageHeight * y), imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
             }
-            // imageCanvas.onclick = function () {
-            //     moverRanomizer(this.id, i)
-            // }
             picturesCounter++;
             document.querySelector('.spookySlicer').appendChild(imageCanvas)
 
@@ -202,26 +188,29 @@ function imageSlicer(i) {
     let playInterval = setInterval(function () {
         intervalCounter--
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
-        if (intervalCounter <= 0){
-            clearInterval(playInterval)
+        if (intervalCounter <= 0) {
+            firstDate = Date.now()
+            console.log(firstDate)
+            let myItv = setInterval(clock, 1)
             arrayIdTaker()
+            clearInterval(playInterval)
         }
-    }, 1,b=i)
+    }, 1, b = i)
 }
 function arrIdCheck() {
     for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
-       if(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id!=picturesIdCheckArray[x]){
-        alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
-        window.location.reload(true)           
-        break;
-       }
-    } 
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
+            alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
+            window.location.reload(true)
+            break;
+        }
+    }
 }
-function arrayIdTaker(){
-    picturesIdCheckArray=[]
+function arrayIdTaker() {
+    picturesIdCheckArray = []
     for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
         picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
-    } 
+    }
 }
 
 function winCheck() {
@@ -242,4 +231,16 @@ function moverRanomizer(e) {
     arrIdCheck()
     winCheck()
     picturesObjectArray[e.target.id].move(ilosc_poz)
+}
+function clock() {
+    let newHour = new Date(Date.now() - firstDate)
+    let hours = newHour.getHours() - 1
+    let mins = newHour.getMinutes()
+    let seconds = newHour.getSeconds()
+    let millisec = newHour.getMilliseconds()
+    console.log("Godziny + " + hours)
+    console.log("minuty + " + mins)
+    console.log("sekundy + " + seconds)
+    console.log("milisekundy + " + millisec)
+    document.body.querySelector('.time').textContent = ((hours + " : " + mins + " : " + seconds + " : " + millisec))
 }
