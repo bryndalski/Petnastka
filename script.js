@@ -1,5 +1,4 @@
-let picturesObjectArray = []
-let firstDate = 0;
+let ilosc_poz = 0, picturesIdCheckArray = [];
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -21,9 +20,6 @@ class pictureStatistic {
         return 0;
     }
     moveMaker(i) {
-        console.log(this.imgPosition)
-        console.log(i)
-        console.log(picturesObjectArray[this.imgPosition + i])
         document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px"
         document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px"
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
@@ -43,20 +39,11 @@ class pictureStatistic {
         })
         document.getElementById(this.imgPosition + i).id = temporaryObject //Pusty 
         document.getElementById(this.imgPosition).id = temporaryId
-        console.log(picturesObjectArray)
+        arrayIdTaker()
+        winCheck()
     }
     moveMakerForWhteBlock(i) {
-        console.log("###CONSOLE LOGI DLA  MOVE MAKERA###############")
-        console.log(picturesObjectArray[this.imgPosition])
-        console.log(picturesObjectArray[this.imgPosition + i])
-        console.log(i)
-        console.log("############## LOGI DLA PRZEMIESZCZENIA DOCELOWEGO ")
-        console.log(picturesObjectArray[this.imgPosition + i].imgX)
-        console.log(picturesObjectArray[this.imgPosition + i].imgY)
 
-        console.log(this.imgPosition)
-        console.log(i)
-        console.log(picturesObjectArray[this.imgPosition + i])
         document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px"
         document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px"
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
@@ -77,7 +64,6 @@ class pictureStatistic {
         document.getElementById(this.imgPosition).id = temporaryId
         document.getElementById(this.imgPosition + i).id = temporaryObject //Pusty 
 
-        console.log(picturesObjectArray)
     }
     move(i) {
         switch (this.possibilities(i)) {
@@ -98,31 +84,26 @@ class pictureStatistic {
         }
     }
     whiteBoxMove(i) {
-        console.log("no ej")
         let possibilitiesArray = this.whiteBoxPossibilities(i)
         let szukany = Math.floor((Math.random() * (possibilitiesArray.length)))
-        console.log(possibilitiesArray)
         switch (possibilitiesArray[szukany]) {
             case 1: // lewo
-                console.log("Jeden")
                 this.moveMakerForWhteBlock(-1)
                 break;
             case 2: // w prawo
-                console.log("Dwa")
                 this.moveMakerForWhteBlock(1)
                 break;
             case 3:
-                console.log("Trzy")
                 this.moveMakerForWhteBlock(-i)
                 break;
             case 4:
-                console.log("Cztry")
                 this.moveMakerForWhteBlock(+i)
                 break;
         }
     }
+
+
     whiteBoxPossibilities(i) {
-        console.log(i)
         let possibilitiesArray = []
         if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != (i - 1))   // lewo && (this.imgPosition-1)%i != 0 
             possibilitiesArray.push(1)
@@ -136,11 +117,23 @@ class pictureStatistic {
     }
 }
 
-// ładowanie skryptu 
+
+var picturesObjectArray = []
 window.addEventListener('DOMContentLoaded', (event) => {
     buttonMaker();
 });
 
+
+function buttonMaker() {
+    let buttonContainer = document.body.querySelector('.buttonContainer');
+    for (i = 3; i <= 6; i++) {
+        let buttonek = document.createElement('button')
+        buttonek.appendChild(document.createTextNode(i + " X " + i))
+        buttonek.onclick = buttonkoweSlicowanie(i);
+        buttonContainer.appendChild(buttonek)
+    }
+}
+//funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
 function restarter() {
     picturesObjectArray = []
     if (document.body.querySelector('.spookySlicer') != null)
@@ -149,24 +142,16 @@ function restarter() {
     spooksCont.classList.add('spookySlicer')
     document.body.appendChild(spooksCont)
 }
-function buttonMaker() {
-    restarter()
-    let buttonContainer = document.createElement("div")
-    buttonContainer.classList.add("buttonContainer")
-    for (i = 3; i < 6; i++) {
-        let buttonek = document.createElement('button')
-        buttonek.appendChild(document.createTextNode(i + " X " + i))
-        buttonek.onclick = buttonkoweSlicowanie(i);
-        buttonContainer.appendChild(buttonek)
-    }
-    document.body.appendChild(buttonContainer)
-}
+// funckja wywołana, pozwala na acess po tzw I do ilość buttonó itp
 function buttonkoweSlicowanie(i) {
     return function () {
         restarter()
         imageSlicer(i)
+        ilosc_poz = i;
+        document.querySelector('.spookySlicer').addEventListener('click', moverRanomizer)
     }
 }
+//funckja robiąca kwadrary 
 function imageSlicer(i) {
     let imageToSlice = new Image()   //tworze nowe img
     imageToSlice.src = './Img/spooky_sceleton.jpg' //nadaje mu nowy src
@@ -191,9 +176,6 @@ function imageSlicer(i) {
                 picturesObjectArray.push(new pictureStatistic("containsImagine", imageWidth * x, imageHeight * y, picturesCounter))
                 contextOfSliceableImage.drawImage(imageToSlice, (imageWidth * x), (imageHeight * y), imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
             }
-            imageCanvas.onclick = function () {
-                moverRanomizer(this.id, i)
-            }
             picturesCounter++;
             document.querySelector('.spookySlicer').appendChild(imageCanvas)
 
@@ -203,28 +185,60 @@ function imageSlicer(i) {
     let intervalCounter = i ** i
     let playInterval = setInterval(function () {
         intervalCounter--
-        console.log("KURDW")
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
         if (intervalCounter <= 0) {
             firstDate = Date.now()
             console.log(firstDate)
-            let myItv = setInterval(clock, 100)
+            let myItv = setInterval(clock, 1)
+            arrayIdTaker()
             clearInterval(playInterval)
         }
-    }, 1)
-
+    }, 1, b = i)
 }
-function moverRanomizer(id, ilosc_poz) {
-    picturesObjectArray[id].move(ilosc_poz)
+function arrIdCheck() {
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
+            alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
+            window.location.reload(true)
+            break;
+        }
+    }
+}
+function arrayIdTaker() {
+    picturesIdCheckArray = []
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+        picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
+    }
+}
+
+function winCheck() {
+    let check = true;
+    //TODO metoda łatwa do ogrania 
+    for (x = 0; x < picturesObjectArray.length; x++) {
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
+            check = false
+            break;
+        }
+    }
+    if (check) {
+        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
+        alert("KONIEC")
+    }
+}
+function moverRanomizer(e) {
+    arrIdCheck()
+    winCheck()
+    picturesObjectArray[e.target.id].move(ilosc_poz)
 }
 function clock() {
-    let newHour = Date.now() - firstDate
-    let hours = newHour.getHours()
+    let newHour = new Date(Date.now() - firstDate)
+    let hours = newHour.getHours() - 1
     let mins = newHour.getMinutes()
     let seconds = newHour.getSeconds()
     let millisec = newHour.getMilliseconds()
     console.log("Godziny + " + hours)
-    console.log("minuty + " + hours)
-    console.log("sekundy + " + hours)
-    console.log("milisekundy + " + hours)
+    console.log("minuty + " + mins)
+    console.log("sekundy + " + seconds)
+    console.log("milisekundy + " + millisec)
+    document.body.querySelector('.time').textContent = ((hours + " : " + mins + " : " + seconds + " : " + millisec))
 }

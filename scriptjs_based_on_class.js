@@ -1,4 +1,4 @@
-let ilosc_poz = 0, picturesIdCheckArray = [];
+let ilosc_poz = 0, picturesIdCheckArray = [],  playInterval,  clockInterval, gameTime=0;
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -125,18 +125,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
 function buttonMaker() {
-    let buttonContainer = document.createElement("button")
-    buttonContainer.classList.add("buttonContainer")
+    let buttonContainer = document.body.querySelector('.buttonContainer');
     for (i = 3; i <= 6; i++) {
         let buttonek = document.createElement('button')
         buttonek.appendChild(document.createTextNode(i + " X " + i))
         buttonek.onclick = buttonkoweSlicowanie(i);
         buttonContainer.appendChild(buttonek)
     }
-    document.body.appendChild(buttonContainer)
 }
 //funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
 function restarter() {
+    clearInterval(playInterval);
+    clearInterval(clockInterval)
+    gameTime=0
+    document.body.querySelector('.time').textContent="00:00:00:00"
     picturesObjectArray = []
     if (document.body.querySelector('.spookySlicer') != null)
         document.body.querySelector('.spookySlicer').remove()
@@ -174,6 +176,7 @@ function imageSlicer(i) {
             let contextOfSliceableImage = imageCanvas.getContext('2d')  //pobieram kontekst z płótna
             if (picturesCounter == i ** 2 - 1)
                 picturesObjectArray.push(new pictureStatistic("EMPTY", imageWidth * x, imageHeight * y, picturesCounter))
+                imageCanvas.classList.add("empty")    
             if (picturesCounter < i ** 2 - 1) {
                 picturesObjectArray.push(new pictureStatistic("containsImagine", imageWidth * x, imageHeight * y, picturesCounter))
                 contextOfSliceableImage.drawImage(imageToSlice, (imageWidth * x), (imageHeight * y), imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
@@ -185,18 +188,56 @@ function imageSlicer(i) {
 
     }
     let intervalCounter = i ** i
-    let playInterval = setInterval(function () {
+    playInterval = setInterval(function () {
         intervalCounter--
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
         if (intervalCounter <= 0) {
             firstDate = Date.now()
             console.log(firstDate)
-            let myItv = setInterval(clock, 1)
+            clockInterval = setInterval(clock, 1)
             arrayIdTaker()
             clearInterval(playInterval)
         }
     }, 1, b = i)
 }
+function winCheck() {
+    let check = true;
+    //TODO metoda łatwa do ogrania 
+    for (x = 0; x < picturesObjectArray.length; x++) {
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
+            check = false
+            break;
+        }
+    }
+    if (check) {
+        clearInterval(clockInterval)
+        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
+        console.log(gameTime)
+        let dvContainer = document.createElement('div')
+        dvContainer.classList.add('alertClass')
+        let noteContainer = document.createElement('h1')
+        noteContainer.appendChild(document.createTextNode(gameTime))
+        dvContainer.appendChild(noteContainer)
+        let button = document.createElement('button')
+        button.appendChild(document.createTextNode('OK'))
+        button.onclick = (dvContainer)=>{
+            document.body.querySelector('.alertClass').remove()
+        }
+        dvContainer.appendChild(button)
+
+        document.body.appendChild(dvContainer)
+    }
+}
+function moverRanomizer(e) {
+    arrIdCheck()
+    picturesObjectArray[e.target.id].move(ilosc_poz)
+}
+function clock() {
+    let newHour = new Date(Date.now() - firstDate)
+     gameTime = ((newHour.getHours() - 1) + " : " + newHour.getMinutes() + " : " +  newHour.getSeconds() + " : " + newHour.getMilliseconds())
+    document.body.querySelector('.time').textContent = gameTime    
+}
+// funckje zabezpieczające próbe zmiany id i oszustwa 
 function arrIdCheck() {
     for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
         if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
@@ -211,36 +252,4 @@ function arrayIdTaker() {
     for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
         picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
     }
-}
-
-function winCheck() {
-    let check = true;
-    //TODO metoda łatwa do ogrania 
-    for (x = 0; x < picturesObjectArray.length; x++) {
-        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
-            check = false
-            break;
-        }
-    }
-    if (check) {
-        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
-        alert("KONIEC")
-    }
-}
-function moverRanomizer(e) {
-    arrIdCheck()
-    winCheck()
-    picturesObjectArray[e.target.id].move(ilosc_poz)
-}
-function clock() {
-    let newHour = new Date(Date.now() - firstDate)
-    let hours = newHour.getHours() - 1
-    let mins = newHour.getMinutes()
-    let seconds = newHour.getSeconds()
-    let millisec = newHour.getMilliseconds()
-    console.log("Godziny + " + hours)
-    console.log("minuty + " + mins)
-    console.log("sekundy + " + seconds)
-    console.log("milisekundy + " + millisec)
-    document.body.querySelector('.time').textContent = ((hours + " : " + mins + " : " + seconds + " : " + millisec))
 }
