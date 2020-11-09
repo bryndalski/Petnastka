@@ -10,7 +10,11 @@ var ilosc_poz = 0,
     picturesIdCheckArray = [],
     playInterval,
     clockInterval,
-    gameTime = 0;
+    gameTime = 0,
+    lastMove = 5;
+var imageToSlice = new Image(); //tworze nowe img
+
+imageToSlice.src = './Img/spooky_sceleton.jpg'; //nadaje mu nowy src
 
 var pictureStatistic =
 /*#__PURE__*/
@@ -42,10 +46,10 @@ function () {
   }, {
     key: "moveMaker",
     value: function moveMaker(i) {
-      document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px";
-      document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px";
-      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
-      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "px"; //podmmieniam indexy 
+      document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "%";
+      document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "%";
+      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%";
+      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"; //podmmieniam indexy 
       // próbuję podmienić 
 
       var temporaryObject = this.imgPosition;
@@ -68,10 +72,10 @@ function () {
   }, {
     key: "moveMakerForWhteBlock",
     value: function moveMakerForWhteBlock(i) {
-      document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "px";
-      document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "px";
-      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "px";
-      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "px"; //podmmieniam indexy 
+      document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "%";
+      document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "%";
+      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%";
+      document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"; //podmmieniam indexy 
       // próbuję podmienić 
 
       var temporaryObject = this.imgPosition;
@@ -119,8 +123,9 @@ function () {
     value: function whiteBoxMove(i) {
       var possibilitiesArray = this.whiteBoxPossibilities(i);
       var szukany = Math.floor(Math.random() * possibilitiesArray.length);
+      lastMove = possibilitiesArray[szukany];
 
-      switch (possibilitiesArray[szukany]) {
+      switch (lastMove) {
         case 1:
           // lewo
           this.moveMakerForWhteBlock(-1);
@@ -144,13 +149,13 @@ function () {
     key: "whiteBoxPossibilities",
     value: function whiteBoxPossibilities(i) {
       var possibilitiesArray = [];
-      if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != i - 1) // lewo && (this.imgPosition-1)%i != 0 
+      if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != i - 1 && lastMove != 0) // lewo && (this.imgPosition-1)%i != 0 
         possibilitiesArray.push(1);
-      if (picturesObjectArray[this.imgPosition + 1] != undefined && (this.imgPosition + 1) % i != 0) // && this.imgId % 10 != (i - 1)
+      if (picturesObjectArray[this.imgPosition + 1] != undefined && (this.imgPosition + 1) % i != 0 && lastMove != 1) // && this.imgId % 10 != (i - 1)
         possibilitiesArray.push(2);
-      if (picturesObjectArray[this.imgPosition - i] != undefined) // góra 
+      if (picturesObjectArray[this.imgPosition - i] != undefined && lastMove != 2) // góra 
         possibilitiesArray.push(3);
-      if (picturesObjectArray[this.imgPosition + i] != undefined) // dół
+      if (picturesObjectArray[this.imgPosition + i] != undefined && lastMove != 3) // dół
         possibilitiesArray.push(4);
       return possibilitiesArray;
     }
@@ -180,6 +185,7 @@ function restarter() {
   clearInterval(playInterval);
   clearInterval(clockInterval);
   gameTime = 0;
+  lastMove = 5;
   document.body.querySelector('.time').textContent = "00:00:00:00";
   picturesObjectArray = [];
   if (document.body.querySelector('.spookySlicer') != null) document.body.querySelector('.spookySlicer').remove();
@@ -200,39 +206,39 @@ function buttonkoweSlicowanie(i) {
 
 
 function imageSlicer(i) {
-  var imageToSlice = new Image(); //tworze nowe img
-
-  imageToSlice.src = './Img/spooky_sceleton.jpg'; //nadaje mu nowy src
-
+  console.log(imageToSlice.width);
   var imageWidth = imageToSlice.width / i; // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
 
   var imageHeight = imageToSlice.height / i; // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
 
   var picturesCounter = 0;
-  document.querySelector('.spookySlicer').width = imageToSlice.width + "px";
-  document.querySelector('.spookySlicer').height = imageToSlice.height + "px"; //drawImage(zdjęcie , pozycja_wejściowego_X,pozycja_Wejściowego_Y,wejściowy_Width,WejściowyHeight,WyjściowyX,WyjściowyY,WyjścioweWidth,WyjścioweHeight)
+  console.log(imageHeight, imageWidth); //drawImage(zdjęcie , pozycja_wejściowego_X,pozycja_Wejściowego_Y,wejściowy_Width,WejściowyHeight,WyjściowyX,WyjściowyY,WyjścioweWidth,WyjścioweHeight)
 
   for (y = 0; y < i; y++) {
     for (x = 0; x < i; x++) {
       var imageCanvas = document.createElement('canvas'); // tworzę moje płutno ponieważ tylko na tym moge pracować
 
-      imageCanvas.width = imageWidth; //nadaję dla canwasImagu winth
+      imageCanvas.width = imageWidth; //nadaję dla canwasImagu
 
-      imageCanvas.height = imageHeight; // nadaję mu heigth
+      imageCanvas.height = imageHeight; //
 
       imageCanvas.id = picturesCounter; // nadaje id dla canvasu
 
-      imageCanvas.style.top = imageHeight * y + "px"; // ustawiam bezwzględną pozycje względem topa
+      imageCanvas.style.top = 100 / i * y + "%"; // ustawiam bezwzględną pozycje względem topa
 
-      imageCanvas.style.left = imageWidth * x + "px"; // ustawiam bezwzględną pozycję wg left
+      imageCanvas.style.left = 100 / i * x + "%"; // ustawiam bezwzględną pozycję wg left
+
+      imageCanvas.classList.add('canvasNumber' + i); // nadaję specjalną klasę stworzoną pod responwyność 
 
       var contextOfSliceableImage = imageCanvas.getContext('2d'); //pobieram kontekst z płótna
 
-      if (picturesCounter == Math.pow(i, 2) - 1) picturesObjectArray.push(new pictureStatistic("EMPTY", imageWidth * x, imageHeight * y, picturesCounter));
-      imageCanvas.classList.add("empty");
+      if (picturesCounter == Math.pow(i, 2) - 1) {
+        picturesObjectArray.push(new pictureStatistic("EMPTY", 100 / i * x, 100 / i * y, picturesCounter));
+        imageCanvas.classList.add("empty");
+      }
 
       if (picturesCounter < Math.pow(i, 2) - 1) {
-        picturesObjectArray.push(new pictureStatistic("containsImagine", imageWidth * x, imageHeight * y, picturesCounter));
+        picturesObjectArray.push(new pictureStatistic("containsImagine", 100 / i * x, 100 / i * y, picturesCounter));
         contextOfSliceableImage.drawImage(imageToSlice, imageWidth * x, imageHeight * y, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight);
       }
 
@@ -255,11 +261,11 @@ function imageSlicer(i) {
       arrayIdTaker();
       clearInterval(playInterval);
     }
-  }, 1, b = i);
+  }, 1000, b = i);
 }
 
 function winCheck() {
-  var check = true; //TODO metoda łatwa do ogrania 
+  var check = true;
 
   for (x = 0; x < picturesObjectArray.length; x++) {
     if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {

@@ -1,10 +1,32 @@
+@mixin widthAndHeight($wt){
+    width:calc(100% / $wt);
+    height:calc(100% / $wt);
+}
+
+
+::-webkit-scrollbar {
+    width: 2px;
+  }
+    ::-webkit-scrollbar-track {
+    background:grey; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: orange; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }
 body{
     background-image:url('./Img/spookyBg.jpg');
     margin: 0;
     padding: 0;
-}
-body *{
-    font-family: 'Permanent Marker', cursive;
+    *{
+        font-family: 'Griffy', cursive;
+    }
 }
 .buttonContainer {
     display: flex;
@@ -12,15 +34,11 @@ body *{
     justify-content: space-around;
 }
 .time{
-    font-family: 'Permanent Marker', cursive;
     color: orange;
     text-align: center;
     margin: 0% auto;
-    margin: 10px;
-    border: solid 5px orange;
 }
 .spooky_img {
-    position: relative;
     border: solid 5px orange;
 }
 button {
@@ -39,6 +57,26 @@ button {
 canvas {
     position: absolute;
     border: solid 2px orange;
+}
+
+.canvasNumber3{
+    width:calc(100% / 3);
+    height:calc(100% / 3);
+}
+
+.canvasNumber4{
+    width:calc(100% / 4);
+    height:calc(100% / 4);
+}
+
+.canvasNumber5{
+    width:calc(100% / 5);
+    height:calc(100% / 5);
+}
+
+.canvasNumber6{
+    width:calc(100% / 6);
+    height:calc(100% / 6);
 }
 .alertClass{
     position:fixed;
@@ -64,37 +102,38 @@ canvas {
     }
 }
 .empty{
-    // border: solid 0.3px whi;
     background-color: rgba(255, 166, 0, 0.493) !important;
 }
-// dla dużych komputerków 
+// dla małych komputerków 
 @media screen and (max-width: 1460px) {
+    body{
+        overflow-x: hidden;
+    }
     .spooky_img{
         display: block;
-        min-height:580px;
-        min-width:640px;       
-        margin:0 auto;
+        margin: 0 auto;
+        width:calc(100vw - 10px);  
+    
     }
     .buttonContainer{
-        min-width:640px; 
+        width:100vw;
         margin:0;
-        padding:10px;
         button{
             width:100%;
             min-height:30px;
         }
     }
     .time{
-        min-width:680px; 
+        width:calc(100vw - 4px);
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: solid 2px orange;
+
     }
     .spookySlicer{
-        margin:0 auto;
-        min-height:580px;
-        height: 580px;
-        min-width:640px;
-        width:640px;
-
-        height:auto;
+        // margin:0 auto;
+        width: calc(100vw - 8px);
+        height:calc(100vw - 8px);
         img{
             width:100%;
             height:100%;
@@ -102,35 +141,27 @@ canvas {
     }
   
 }
+//dla dużych komputerków 
 @media screen and (min-width: 1461px){
     .spooky_img{
         display: block;
-        min-height:580px;
-        min-width:640px;       
     }
     .buttonContainer{
-        min-width:680px; 
         margin:0;
         padding:10px;
         button{
             width:100%;
             min-height:30px;
         }
-        // position: fixed;
-        // top:0;
+
     }
-    .time{
-        min-width:680px; 
-    }
+ 
     .spookySlicer{
         position: fixed !important;
         top:0px ;
         right:0 !important;
-        min-height:580px;
-        height: 580px;
-        min-width:640px;
-        width:640px;
-        height:auto;
+        width:650px;
+        height:591px;
         img{
             width:100%;
             height:100%;
