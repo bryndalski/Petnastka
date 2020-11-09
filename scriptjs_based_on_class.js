@@ -87,6 +87,7 @@ class pictureStatistic {
         let possibilitiesArray = this.whiteBoxPossibilities(i)
         let szukany = Math.floor((Math.random() * (possibilitiesArray.length)))
         lastMove = possibilitiesArray[szukany]
+        console.log(lastMove)
         switch (lastMove) {
             case 1: // lewo
                 this.moveMakerForWhteBlock(-1)
@@ -104,11 +105,11 @@ class pictureStatistic {
     }
     whiteBoxPossibilities(i) {
         let possibilitiesArray = []
-        if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != (i - 1) && lastMove != 0)   // lewo && (this.imgPosition-1)%i != 0 
+        if (picturesObjectArray[this.imgPosition - 1] != undefined && (this.imgPosition - 1) % i != (i - 1) && lastMove != 2)   // lewo && (this.imgPosition-1)%i != 0 
             possibilitiesArray.push(1)
         if (picturesObjectArray[this.imgPosition + 1] != undefined && (this.imgPosition + 1) % i != 0 && lastMove != 1)  // && this.imgId % 10 != (i - 1)
             possibilitiesArray.push(2)
-        if (picturesObjectArray[this.imgPosition - i] != undefined && lastMove!=2)  // góra 
+        if (picturesObjectArray[this.imgPosition - i] != undefined && lastMove!=4)  // góra 
             possibilitiesArray.push(3)
         if (picturesObjectArray[this.imgPosition + i] != undefined && lastMove != 3)  // dół
             possibilitiesArray.push(4)
