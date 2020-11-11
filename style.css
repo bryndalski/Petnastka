@@ -1,3 +1,7 @@
+@font-face {
+  font-family: cyberNumbers;
+  src: url("./fonts/Kill The Noise.otf") format("opentype");
+}
 ::-webkit-scrollbar {
   width: 2px;
 }
@@ -8,7 +12,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: orange;
+  background: #00ffed;
 }
 
 /* Handle on hover */
@@ -17,12 +21,13 @@
 }
 
 body {
-  background-image: url("./Img/spookyBg.jpg");
+  background-image: url("./Img/cyberBg.jpg");
+  background-repeat: no-repeat;
   margin: 0;
   padding: 0;
 }
 body * {
-  font-family: "Griffy", cursive;
+  font-family: "cyberNumbers" !important;
 }
 
 .buttonContainer {
@@ -32,33 +37,32 @@ body * {
 }
 
 .time {
-  color: orange;
+  color: #00ffed;
   text-align: center;
   margin: 0% auto;
 }
 
 .spooky_img {
-  border: solid 5px orange;
+  border: solid 5px #00ffed;
 }
 
 button {
   border: solid black 1px;
   border-radius: 4px;
-  background-color: orange;
+  background-color: #caff01;
   color: black;
   font-weight: bold;
 }
 
 .spookySlicer {
   position: relative;
-  border: solid 4px orange;
+  border: solid 4px #00ffed;
   margin: 0% auto;
   margin-top: 3px;
 }
 
 canvas {
   position: absolute;
-  border: solid 2px orange;
 }
 
 .canvasNumber3 {
@@ -86,29 +90,29 @@ canvas {
   margin: 0 auto;
   top: calc(50% - 200px);
   left: calc(50% - 200px);
-  background-image: url("./Img/spoookyAlert.jpg");
+  background-color: black;
   width: 500px;
   height: 100px;
-  border: solid 1px orange;
+  border: solid 1px #00ffed;
   text-align: center;
   padding-top: 50px;
 }
 .alertClass h1 {
-  color: orange;
+  color: #00ffed;
   display: block;
   margin: 0 auto;
 }
 .alertClass button {
-  border: solid 1px orange;
+  border: solid 3px #00ffed;
   width: 50px;
   height: 30px;
 }
 
 .empty {
-  background-color: rgba(255, 166, 0, 0.493) !important;
+  background-color: #00ffee88 !important;
 }
 
-@media screen and (max-width: 1460px) {
+@media screen and (max-width: 900px) {
   body {
     overflow-x: hidden;
   }
@@ -127,12 +131,15 @@ canvas {
     width: 100%;
     min-height: 30px;
   }
+  .buttonContainer button:hover {
+    border: solid 1px #00ffed;
+  }
 
   .time {
     width: calc(100vw - 4px);
     margin-top: 10px;
     margin-bottom: 10px;
-    border: solid 2px orange;
+    border: solid 2px #00ffed;
   }
 
   .spookySlicer {
@@ -144,26 +151,51 @@ canvas {
     height: 100%;
   }
 }
-@media screen and (min-width: 1461px) {
+@media screen and (min-width: 900px) {
   .spooky_img {
+    margin: 10px;
+    margin-left: 8%;
     display: block;
+    width: 30vw;
+    height: 30vw;
+    max-width: 700px;
+    max-height: 700px;
   }
 
   .buttonContainer {
+    position: absolute;
+    bottom: 0;
     margin: 0;
     padding: 10px;
+    width: 45vw;
+    height: 10vh;
   }
   .buttonContainer button {
-    width: 100%;
+    font-size: 5vh;
+    line-height: 5vh;
+    width: 50%;
+    margin: 10px;
     min-height: 30px;
+  }
+
+  .time {
+    position: absolute;
+    bottom: 15vh;
+    width: 50%;
+    margin: 0;
+  }
+  .time img {
+    width: calc(100% / 13);
+    margin: 0;
+    height: 50px;
   }
 
   .spookySlicer {
     position: fixed !important;
-    top: 0px;
-    right: 0 !important;
-    width: 650px;
-    height: 591px;
+    top: 10px;
+    right: 10px !important;
+    width: calc(50vw - 40px);
+    height: calc(50vw - 40px);
   }
   .spookySlicer img {
     width: 100%;
