@@ -2,8 +2,8 @@ let ilosc_poz = 0,
     picturesIdCheckArray = [],
     playInterval, clockInterval, gameTime = 0,
     lastMove = 5;
-const imageSourceArray = ['./Img/cyberPunkPhoto.jpg', './Img/cyberGif.gif', './Img/cyberPunkImg2.png', ]
 const imageToSlice = new Image() //tworze nowe img
+const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
 imageToSlice.src = './Img/cyberPunkPhoto.jpg' //nadaje mu nowy src
 
 class pictureStatistic {
@@ -122,7 +122,7 @@ class pictureStatistic {
 }
 var picturesObjectArray = []
 window.addEventListener('DOMContentLoaded', (event) => {
-    buttonMaker();
+    gameStarter()
 });
 
 function buttonMaker() {
@@ -205,39 +205,13 @@ function imageSlicer(i) {
         }
     }, 1, b = i)
 }
-
-function winCheck() {
-    let check = true;
-    for (x = 0; x < picturesObjectArray.length; x++) {
-        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
-            check = false
-            break;
-        }
-    }
-    if (check) {
-        clearInterval(clockInterval)
-        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
-        let dvContainer = document.createElement('div')
-        dvContainer.classList.add('alertClass')
-        let noteContainer = document.createElement('h1')
-        noteContainer.appendChild(document.createTextNode(gameTime))
-        dvContainer.appendChild(noteContainer)
-        let button = document.createElement('button')
-        button.appendChild(document.createTextNode('OK'))
-        button.onclick = (dvContainer) => {
-            document.body.querySelector('.alertClass').remove()
-        }
-        dvContainer.appendChild(button)
-        document.body.appendChild(dvContainer)
-    }
-}
-
+//ruch
 function moverRanomizer(e) {
     arrIdCheck()
     if (picturesObjectArray[e.target.id] != null)
         picturesObjectArray[e.target.id].move(ilosc_poz)
 }
-
+//zegar
 function clock() {
     let newHour = new Date(Date.now() - firstDate)
     let timeArray = ["00", ":", "00", ":", "00", ":", "000"];
@@ -266,24 +240,6 @@ function clock() {
     gameTime = timeArray.join('')
     clockImageSetter(timeArray)
 }
-// funckje zabezpieczające próbe zmiany id i oszustwa 
-function arrIdCheck() {
-    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
-        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
-            alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
-            window.location.reload(true)
-            break;
-        }
-    }
-}
-
-function arrayIdTaker() {
-    picturesIdCheckArray = []
-    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
-        picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
-    }
-}
-
 
 function clockImageSetter(time) {
     let newTime = time.join('')
@@ -327,4 +283,206 @@ function clockImageSetter(time) {
         }
         document.body.querySelector('.time img:nth-child(' + (i + 1) + ')').src = imagePath;
     }
+}
+//wygrana 
+function winCheck() {
+    let check = true;
+    //TODO odkomentuj linike sprawdzenie zawsze działa !!!!!!!! 
+    // for (x = 0; x < picturesObjectArray.length; x++) {
+    //     if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
+    //         check = false
+    //         break;
+    //     }
+    // }
+    if (check) {
+        console.log(gameTime)
+        gameTime = gameTime.replace(/:/g, "  ")
+        clearInterval(clockInterval)
+        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
+        let dvContainer = document.createElement('div')
+        dvContainer.classList.add('alertClass')
+        let noteContainer = document.createElement('h1')
+        noteContainer.appendChild(document.createTextNode("Your Time  " + gameTime))
+        dvContainer.appendChild(noteContainer)
+        let button = document.createElement('button')
+        button.appendChild(document.createTextNode('OK'))
+        button.onclick = (dvContainer) => {
+            document.body.querySelector('.alertClass').remove()
+        }
+        let buttonShow = document.createElement('button')
+        buttonShow.appendChild(document.createTextNode('Save'))
+        buttonShow.onclick = function () {
+            Save()
+        }
+        let buttonStats = document.createElement('button')
+        buttonStats.appendChild(document.createTextNode('top 10'))
+        buttonStats.onclick = function () {
+            gameStarter()
+        }
+        dvContainer.appendChild(buttonStats)
+        dvContainer.appendChild(button)
+        dvContainer.appendChild(buttonShow)
+        document.body.appendChild(dvContainer)
+    }
+}
+
+// funckje zabezpieczające próbe zmiany id i oszustwa 
+function arrIdCheck() {
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
+            alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
+            window.location.reload(true)
+            break;
+        }
+    }
+}
+
+function arrayIdTaker() {
+    picturesIdCheckArray = []
+    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
+        picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
+    }
+}
+
+// cookies + tabela koxów
+function gameStarter() {
+    document.body.innerHTML = '' // czyści body 
+    //towrzę img 
+    let imagine = document.createElement('img');
+    imagine.classList.add('spooky_img')
+    imagine.src = './Img/loadingScreen.gif';
+    //tworzę container z czasem
+    let timeCont = document.createElement('div');
+    timeCont.classList.add('time')
+    for (i = 0; i < 12; i++) {
+        let digit = document.createElement('img')
+        timeCont.appendChild(digit)
+        if (i == 2 || i == 5 || i == 8)
+            digit.src = './digits/Ddots.gif'
+        else
+            digit.src = './digits/zeroIco.gif'
+    }
+    //buttonki
+    let buttonContainer = document.createElement('div')
+    buttonContainer.classList.add('buttonContainer')
+
+    // tworzę image slicera
+    let slicer = document.createElement('div')
+    slicer.classList.add('spookySlicer')
+    slicer.appendChild(imagine)
+
+    document.body.appendChild(imagine) // dodawanie obazka
+    document.body.appendChild(timeCont)
+    document.body.appendChild(buttonContainer)
+    document.body.appendChild(slicer)
+    buttonMaker();
+
+}
+
+function Save() {
+    document.body.innerHTML = '' // czyści body 
+    //container na formularz
+    let fomrContainer = document.createElement('div')
+    fomrContainer.classList.add('formContainer')
+    //input Type Text
+    let textInput = document.createElement('input')
+    textInput.type = 'text'
+    //status
+    let status = document.createElement('p')
+    status.appendChild(document.createTextNode('Enter Nickname'))
+    //submit
+    let submit = document.createElement('button')
+    submit.onclick = () => {
+        cookieMaker(textInput.value)
+    }
+    fomrContainer.appendChild(textInput)
+    fomrContainer.appendChild(status)
+    fomrContainer.appendChild(submit)
+    document.body.appendChild(fomrContainer)
+    textInput.addEventListener('input', nickNamePossibilityChecker)
+}
+
+function cookieMaker(nick) { //TODO dodaj 2 zabezpieczenie 
+    let cookieContent = cookieToJSONMaker(gameTypeForCookieId())
+    if (nickNamePossibilityChecker()) {
+        let cookieObject = {
+            name: nick,
+            time: gameTime
+        }
+        cookieContent.push(cookieObject)
+        console.log(document.cookie)
+        document.cookie = gameTypeForCookieId() + "=" + JSON.stringify(cookieContent);
+        console.log(document.cookie)
+
+        //tworzę wiadomośc 
+        let container = document.querySelector('div')
+        container.innerHTML = ''
+        let text = document.createElement('p')
+        text.textContent = "Twój nick został zapisany poprawnie"
+        let exitBty = document.createElement('button')
+        let okButton = document.createElement('button')
+        exitBty.textContent = "Pokaż tabele wyników"
+        exitBty.onclick = () => {}
+        okButton.textContent = "Ok"
+        okButton.onclick = () => {
+            gameStarter()
+        }
+        container
+            .appendChild(text)
+            .appendChild(okButton)
+            .appendChild(exitBty)
+    } else {
+        alert("Nie można zapisać takich danych")
+    }
+}
+
+function gameTypeForCookieId() {
+    switch (ilosc_poz) {
+        case 3:
+            return "3vs3Stats"
+        case 4:
+            return "4vs4Stats"
+        case 5:
+            return "5vs5Stats"
+        case 6:
+            return "6vs6Stats"
+    }
+}
+
+function nickNamePossibilityChecker() { // TODO dodaj maksyamlną długość nicku 
+    let inputValue = document.querySelector("input").value;
+    console.log(inputValue)
+    if (inputValue == '') {
+        document.body.querySelector('p').textContent = "Wpisz nick "
+        return false;
+    } else if (patternForInputs.test(inputValue)) {
+        document.body.querySelector('p').textContent = "Niepoprawne znaki "
+        return false;
+    } else {
+        let doubleNick = cookieToJSONMaker().find(element => element.name == inputValue);
+        console.log(doubleNick)
+        if (doubleNick != undefined) {
+            document.body.querySelector('p').textContent = "Ten nick jest już zajęty "
+            return false;
+        } else {
+            document.body.querySelector('p').textContent = "Nick Wolny"
+            return true;
+        }
+    }
+}
+
+function cookieToJSONMaker() {
+    let documentCookies = document.cookie
+    documentCookies = documentCookies.split('; ')
+    let searchingPattern = new RegExp("^" + gameTypeForCookieId() + "=*")
+    console.log(searchingPattern)
+    // searchingPattern
+    let found = documentCookies.filter(indexLike => searchingPattern.test(indexLike)); //!!!3 vs3Stats!!!wyszukuje index z Username.Używam regexa żeby znalazł dopasowanie do końca lini do nazwy moego cookie
+    console.log(found)
+    if (found != undefined && found.length != 0) {
+        found = found[0].substring(10) // wyszukany index zmieniam do formatu podatnego na JSONA 
+        found = JSON.parse(found)
+        console.log(typeof found)
+    }
+    return found
 }
