@@ -85,6 +85,20 @@ canvas {
   height: calc(100% / 6);
 }
 
+table {
+  border: solid 1px white;
+  margin: 0 auto;
+  margin-top: 10%;
+  width: 80vw;
+  background-color: rgba(0, 0, 0, 0.931);
+}
+table th {
+  color: #caff01;
+}
+table tr {
+  color: #00ffed;
+}
+
 .formContainer {
   position: absolute;
   top: calc(60% - 30vh);

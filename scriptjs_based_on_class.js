@@ -6,7 +6,7 @@ const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
 imageToSlice.src = './Img/cyberPunkPhoto.jpg' //nadaje mu nowy src
 
-class pictureStatistic {
+class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie 
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
         this.imgX = imgX;
@@ -133,6 +133,12 @@ function buttonMaker() {
         buttonek.onclick = buttonkoweSlicowanie(i);
         buttonContainer.appendChild(buttonek)
     }
+    let buttonek = document.createElement('button')
+    buttonek.appendChild(document.createTextNode("Pokaż wyniki"))
+    buttonek.onclick = displayResults;
+    buttonContainer.appendChild(buttonek)
+
+
 }
 //funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
 function restarter() {
@@ -295,8 +301,6 @@ function winCheck() {
     //     }
     // }
     if (check) {
-        console.log(gameTime)
-        gameTime = gameTime.replace(/:/g, "  ")
         clearInterval(clockInterval)
         document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
         let dvContainer = document.createElement('div')
@@ -308,6 +312,7 @@ function winCheck() {
         button.appendChild(document.createTextNode('OK'))
         button.onclick = (dvContainer) => {
             document.body.querySelector('.alertClass').remove()
+            restarter()
         }
         let buttonShow = document.createElement('button')
         buttonShow.appendChild(document.createTextNode('Save'))
@@ -317,7 +322,7 @@ function winCheck() {
         let buttonStats = document.createElement('button')
         buttonStats.appendChild(document.createTextNode('top 10'))
         buttonStats.onclick = function () {
-            gameStarter()
+            displayResults()
         }
         dvContainer.appendChild(buttonStats)
         dvContainer.appendChild(button)
@@ -345,6 +350,7 @@ function arrayIdTaker() {
 }
 
 // cookies + tabela koxów
+// formularz do wprowadzania nicku
 function gameStarter() {
     document.body.innerHTML = '' // czyści body 
     //towrzę img 
@@ -378,7 +384,7 @@ function gameStarter() {
     buttonMaker();
 
 }
-
+//dla buttonu
 function Save() {
     document.body.innerHTML = '' // czyści body 
     //container na formularz
@@ -410,9 +416,7 @@ function cookieMaker(nick) { //TODO dodaj 2 zabezpieczenie
             time: gameTime
         }
         cookieContent.push(cookieObject)
-        console.log(document.cookie)
         document.cookie = gameTypeForCookieId() + "=" + JSON.stringify(cookieContent);
-        console.log(document.cookie)
 
         //tworzę wiadomośc 
         let container = document.querySelector('div')
@@ -446,21 +450,24 @@ function gameTypeForCookieId() {
             return "5vs5Stats"
         case 6:
             return "6vs6Stats"
+        default:
+            return "3vs3Stats"
     }
 }
-
-function nickNamePossibilityChecker() { // TODO dodaj maksyamlną długość nicku 
+//sprawdzanie działania nicku 
+function nickNamePossibilityChecker() {
     let inputValue = document.querySelector("input").value;
-    console.log(inputValue)
     if (inputValue == '') {
         document.body.querySelector('p').textContent = "Wpisz nick "
+        return false;
+    } else if (inputValue.length > 20) {
+        document.body.querySelector('p').textContent = "Przekroczono maksymalną długość nicku "
         return false;
     } else if (patternForInputs.test(inputValue)) {
         document.body.querySelector('p').textContent = "Niepoprawne znaki "
         return false;
     } else {
         let doubleNick = cookieToJSONMaker().find(element => element.name == inputValue);
-        console.log(doubleNick)
         if (doubleNick != undefined) {
             document.body.querySelector('p').textContent = "Ten nick jest już zajęty "
             return false;
@@ -475,14 +482,110 @@ function cookieToJSONMaker() {
     let documentCookies = document.cookie
     documentCookies = documentCookies.split('; ')
     let searchingPattern = new RegExp("^" + gameTypeForCookieId() + "=*")
-    console.log(searchingPattern)
-    // searchingPattern
     let found = documentCookies.filter(indexLike => searchingPattern.test(indexLike)); //!!!3 vs3Stats!!!wyszukuje index z Username.Używam regexa żeby znalazł dopasowanie do końca lini do nazwy moego cookie
-    console.log(found)
     if (found != undefined && found.length != 0) {
         found = found[0].substring(10) // wyszukany index zmieniam do formatu podatnego na JSONA 
         found = JSON.parse(found)
-        console.log(typeof found)
     }
     return found
+}
+
+
+//pokazywanie wyników - tworzy wybów przycisków == wybór trybów gry 
+function displayResults() {
+    clearInterval(playInterval);
+    clearInterval(clockInterval)
+    document.body.innerHTML = '' //czyszcze
+    let buttonContainer = document.createElement('div')
+    buttonContainer.classList.add('dispalyResultsButtons')
+    for (i = 3; i <= 6; i++) {
+        let buttonik = document.createElement('button')
+        buttonik.textContent = i + " na " + i;
+        buttonik.onclick = playViewReturn(i)
+        buttonContainer.appendChild(buttonik)
+    }
+    document.body.appendChild(buttonContainer)
+
+}
+//pomocnicza do funkcji zminia kilka rzeczy , z
+function playViewReturn(x) {
+    return function () {
+        ilosc_poz = x
+        sorterArrayMaker()
+    }
+}
+// tworzy tabele z wynikami / sortuje ją i wyswietla top 10 dla wybranego przez siebie wyniku 
+function sorterArrayMaker() {
+    clearInterval(playInterval);
+    clearInterval(clockInterval)
+    let arrayToSort = cookieToJSONMaker()
+    arrayToSort.sort((a, b) => {
+        return parseInt(a.time.replace(/:/g, "")) - parseInt(b.time.replace(/:/g, ""))
+    });
+    //tworzenie tabeli 
+    document.body.innerHTML = ''
+    //tworze tabele wyników
+    let table = document.createElement('table')
+    // description
+    let row = document.createElement('tr')
+    for (i = 0; i < 3; i++) {
+        let cell = document.createElement('th')
+        switch (i) {
+            case 0:
+                cell.textContent = "Miejsce"
+                break;
+            case 1:
+                cell.textContent = "Nikk"
+                break;
+            case 2:
+                cell.textContent = "Czas"
+                break;
+        }
+        row.appendChild(cell)
+    }
+    table.appendChild(row)
+    for (i = 0; i < 10; i++) {
+        let row = document.createElement('tr')
+        for (x = 0; x < 3; x++) {
+            let cell = document.createElement('th')
+            if (arrayToSort[i] == undefined)
+                switch (x) {
+                    case 0:
+                        cell.textContent = i + 1
+                        break;
+                    case 1:
+                    case 2:
+                        cell.textContent = 'BRAK '
+                        break;
+                }
+            else
+                switch (x) {
+                    case 0:
+                        cell.textContent = i + 1
+                        break;
+                    case 1:
+                        cell.textContent = arrayToSort[i].name;
+                        break;
+                    case 2:
+                        cell.textContent = arrayToSort[i].time
+                        break;
+                }
+            row.appendChild(cell)
+        }
+        table.appendChild(row)
+    }
+    //tworzenie buttona dla nowej gry
+    let buttonNewGame = document.createElement('button')
+    buttonNewGame.textContent = "Nowa gra"
+    buttonNewGame.onclick = gameStarter;
+    //tworze    
+    let buttonRestartGame = document.createElement('button')
+    buttonRestartGame.textContent = "Pokaż wyniki"
+    buttonRestartGame.onclick = displayResults;
+
+
+
+    document.body.appendChild(table)
+    document.body.appendChild(buttonNewGame)
+    document.body.appendChild(buttonRestartGame)
 }
