@@ -1,17 +1,24 @@
-$cyberBlue:#00ffed;
-$cyberYellow:#caff01;
-$cyberGreen:#01ff11;
-$cyberPink:#ff0082;
-$cyberViolet:#a400ff;
-
 @mixin widthAndHeight($wt) {
     width: calc(100% / $wt);
     height: calc(100% / $wt);
 }
 
-@font-face {
-    font-family: cyberNumbers;
-    src: url('./fonts/Kill\ The\ Noise.otf') format("opentype");
+@mixin buttonStyle {
+    button {
+        display: inline-block;
+        text-align: center;
+        border: solid 1px white;
+        color: white;
+        border-radius: 3px;
+        background-color: rgba(0, 0, 0, 0);
+        transition: all ease-in-out 0.5s;
+    }
+
+    button:hover {
+        color: black;
+        background-color: white;
+        cursor: pointer;
+    }
 }
 
 ::-webkit-scrollbar {
@@ -24,7 +31,7 @@ $cyberViolet:#a400ff;
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: $cyberBlue;
+    background: white;
 }
 
 /* Handle on hover */
@@ -32,19 +39,29 @@ $cyberViolet:#a400ff;
     background: #555;
 }
 
-body {
-    background-image: url('./Img/cyberBg.jpg');
-    background-repeat: no-repeat;
-    margin: 0;
+//overlay 
+.overLay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
 
+
+body {
+    background-image: url('./Img/DarkSky.png');
+    background-repeat: repeat;
+    margin: 0;
     padding: 0;
 
     * {
-        // font-family: 'cyberNumbers' !important;
-        font-family: 'Roboto Mono',
-            monospace !important;
-
-
+        font-family: 'Patrick Hand',
+            cursive;
     }
 }
 
@@ -52,36 +69,39 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+
+    button {
+        display: inline-block;
+        text-align: center;
+        border: solid 1px white;
+        color: white;
+        border-radius: 3px;
+        background-color: rgba(0, 0, 0, 0);
+    }
 }
 
 .time {
-    color: $cyberBlue;
+    // color:white;
     text-align: center;
     margin: 0% auto;
 }
 
 .spooky_img {
-    border: solid 5px $cyberBlue;
+    border: solid 5px white;
 }
 
-button {
-    border: solid black 1px;
-    border-radius: 4px;
-    background-color: $cyberYellow;
-    color: black;
-    font-weight: bold;
-}
 
-.spookySlicer {
+
+.sliceContainer {
     position: relative;
-    border: solid 4px $cyberBlue;
+    border: solid 4px white;
     margin: 0% auto;
     margin-top: 3px;
 }
 
 canvas {
     position: absolute;
-    // border: solid 1px $cyberBlue;
+    // border: solid 1pxwhite;
 }
 
 .canvasNumber3 {
@@ -104,31 +124,33 @@ canvas {
     height: calc(100% / 6);
 }
 
+//wyniki 
 table {
     border: solid 1px white;
     margin: 0 auto;
-    margin-top: 10%;
-    width: 80vw;
+
     background-color: rgba(0, 0, 0, 0.931);
 
     th {
-        color: $cyberYellow;
+        color: white;
     }
 
     tr {
-        color: $cyberBlue;
+        color: white;
     }
 }
 
+
+
 .formContainer {
     position: absolute;
-    top: calc(60% - 30vh);
-    left: calc(50% - 30vw);
-    width: 60vw;
-    height: 30vh;
+    top: 25%;
+    left: 20%;
+    align-self: center;
+    margin: 0 auto;
     padding: 3%;
-    background-color: black;
-    border: solid 1px $cyberBlue;
+    background-color: rgba(0, 0, 0, 0);
+    border: solid 1px white;
     border-radius: 10px;
     text-align: center;
     display: flex;
@@ -136,68 +158,68 @@ table {
     justify-content: space-around;
 
     p {
-        color: $cyberBlue;
+        color: white;
         font-size: 30pt;
     }
 
     input[type='text'] {
         margin-top: 50%;
-        background-color: $cyberYellow;
+        background-color: white;
         margin: 0 auto;
         width: 60%;
         height: 40px;
-        border: solid 3px $cyberBlue;
+        border: solid 3px white;
         border-radius: 3px;
         line-height: 40px;
         font-size: 20pt;
     }
 
     input[type='text']:focus {
-        border: solid 3px $cyberPink;
+        border: solid 3px white;
     }
 
+    @include buttonStyle();
+
     button {
-        // width: 20%;
-        // overflow: auto;
-        margin: 0 auto;
+        margin: 10px;
         height: 50px;
         font-size: medium;
         padding: 3px;
-        transition: all ease-in 0.3s;
-
     }
 
     button:after {
-        content: "Zapisz";
+        content: "";
         margin: 3px;
     }
 
-    button:hover {
-        border: solid 1px $cyberPink;
-    }
+
 }
 
 .alertClass {
     position: fixed;
-    margin: 0 auto;
+    display: inline-block;
+    background: url('./Img/DarkSky.png');
     top: calc(50% - 200px);
     left: calc(50% - 200px);
-    background-color: black;
-    width: 500px;
-    height: 100px;
-    border: solid 1px $cyberBlue;
+    padding: 10px;
+    background-color: white;
+    border: solid 3px white;
+    border-radius: 10px;
     text-align: center;
     padding-top: 50px;
+    z-index: 4;
 
     h1 {
-        color: $cyberBlue;
+        color: white;
         display: block;
         margin: 0 auto;
 
     }
 
+    @include buttonStyle();
+
     button {
-        border: solid 3px $cyberBlue;
+        border: solid 3px white;
         width: 100px;
         height: 50px;
         margin: 10px;
@@ -207,6 +229,13 @@ table {
     }
 }
 
+.dispalyResultsButtons {
+    margin: 0 auto;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    @include buttonStyle()
+}
 
 .empty {
     background-color: #00ffee88 !important;
@@ -216,41 +245,48 @@ table {
 @media screen and (max-width: 900px) {
     body {
         overflow-x: hidden;
+        display: flex;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: space-around;
     }
 
     .spooky_img {
+        // margin-top: 5px !important;
         display: block;
         margin: 0 auto;
-        width: calc(100vw - 10px);
+        width: 50vw;
 
     }
 
     .buttonContainer {
-        width: 100vw;
+        // width: calc(100vw - 10px);
         margin: 0;
 
         button {
-            width: 100%;
             min-height: 30px;
-
+            font-size: 4vw;
 
         }
 
+        @include buttonStyle();
+
         button:hover {
-            border: solid 1px $cyberBlue;
+            border: solid 1px white;
         }
     }
 
     .time {
-        width: calc(100vw - 4px);
+        width: calc(100vw - 5px);
         margin-top: 10px;
         margin-bottom: 10px;
-        border: solid 2px $cyberBlue;
+        height: 30px;
 
     }
 
-    .spookySlicer {
+    .sliceContainer {
         // margin:0 auto;
+        order: 1;
         width: calc(100vw - 8px);
         height: calc(100vw - 8px);
 
@@ -260,32 +296,81 @@ table {
         }
     }
 
+    .dispalyResultsButtons {
+        flex-direction: column;
+        @include buttonStyle();
+        // text-align: center;
+        justify-content: space-around;
+        align-items: center;
+
+        button {
+            width: 90vw;
+            height: 20vh;
+            font-size: 5vw;
+        }
+    }
+
+    table {
+        width: 98vw;
+
+        tr {
+            font-size: 5vw;
+
+        }
+    }
+
+    .resultsContainer {
+        @include buttonStyle();
+        height: 10vh;
+        display: flex;
+        justify-content: space-around;
+
+        button {
+            width: 25%;
+            font-size: 5vw;
+
+        }
+    }
 }
 
 //dla dużych komputerków 
-@media screen and (min-width: 900px) {
+@media screen and (min-height: 650px) and (min-width: 900px) {
     .spooky_img {
         margin: 10px;
-        margin-left: 8%;
         display: block;
-        width: 30vw;
-        height: 30vw;
-        max-width: 700px;
-        max-height: 700px;
+        width: calc(60vw - 25vh);
+        height: calc(60vw - 25vh);
+        max-height: 75vh;
+        max-width: 75vh;
+
+    }
+
+    .sliceContainer {
+        position: fixed !important;
+        top: 10px;
+        right: 10px;
+        width: calc(70vw - 25vh);
+        height: calc(70vw - 25vh);
+        max-height: 75vh;
+        max-width: 75vh;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+
     }
 
     .buttonContainer {
         position: absolute;
         bottom: 0;
-        margin: 0;
-        padding: 10px;
-        width: 45vw;
+        width: 100vw;
         height: 10vh;
+        @include buttonStyle();
 
         button {
             font-size: 2vh;
-            line-height: 5vh;
-            width: 50%;
+            width: 100%;
             margin: 10px;
             min-height: 30px;
         }
@@ -295,28 +380,147 @@ table {
     .time {
         position: absolute;
         bottom: 15vh;
-        width: 50%;
-        margin: 0;
+        width: 50vw;
+        left: calc(50vw - 25vw);
 
         img {
-            width: calc(100% / 13);
+            // width: calc(100% / 20);
             margin: 0;
-            height: 50px;
         }
     }
 
-    .spookySlicer {
-        position: fixed !important;
-        top: 10px;
-        right: 10px !important;
-        width: calc(50vw - 40px);
 
-        height: calc(50vw - 40px);
+
+    .dispalyResultsButtons {
+        flex-direction: row;
+        justify-content: space-around;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+        button {
+            margin: 10px;
+            width: 25vw;
+            height: 25vw;
+
+            font-size: 5vw;
+        }
+    }
+
+    .resultsContainer {
+        display: inline-block;
+        flex-direction: row;
+        margin: 20px;
+        width: calc(100vw - 40px);
+        height: 10vw;
+        text-align: center;
+        @include buttonStyle();
+
+        button {
+            height: 10vw;
+            width: 10vw;
+            margin: 10px;
+            font-size: 10pt;
+
+        }
+    }
+
+    table {
+        margin-top: 10%;
+        width: 80vw;
+    }
+}
+
+//dla dużych wąskich ekraników 
+@media screen and (max-height: 650px) and (min-width: 890px) {
+    body {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .spooky_img {
+        width: 30vw;
+        height: 30vw;
+    }
+
+    .sliceContainer {
+        width: 30vw;
+        height: 30vw;
+
 
         img {
             width: 100%;
             height: 100%;
         }
+    }
+
+    .buttonContainer {
+        position: absolute;
+        right: 0;
+        display: flex;
+        flex-direction: column;
+        margin: 20px; // bottom: 0;
+        @include buttonStyle();
+
+        button {
+            font-size: 2vh;
+            width: 100%;
+            margin: 10px;
+            min-height: 30px;
+        }
+
+    }
+
+    .time {
+        position: absolute;
+        bottom: 10px;
+        width: 50vw;
+        left: calc(50vw - 25vw);
+
+        img {
+            // width: calc(100% / 20);
+            margin: 0;
+        }
+    }
+
+
+
+    .dispalyResultsButtons {
+        flex-direction: row;
+        justify-content: space-around;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+
+        button {
+            margin: 10px;
+            width: calc(20vw - 40px);
+            height: 20vw;
+            font-size: 5vw;
+        }
+    }
+
+    .resultsContainer {
+        display: inline-block;
+        flex-direction: column;
+        margin-top: 10%;
+        text-align: center;
+        @include buttonStyle();
+
+        button {
+            height: 10vw;
+            width: 10vw;
+            margin: 10px;
+            font-size: 20pt;
+
+
+        }
+    }
+
+    table {
+        margin-top: 10%;
+        width: 80vw;
     }
 
 }

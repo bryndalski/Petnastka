@@ -4,8 +4,7 @@ let ilosc_poz = 0,
     lastMove = 5;
 const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
-imageToSlice.src = './Img/cyberPunkPhoto.jpg' //nadaje mu nowy src
-
+imageToSlice.src = './Img/AmmongPhoto.jpg' //nadaje mu nowy src
 class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie 
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -35,7 +34,6 @@ class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie
         // próbuję podmienić 
         let temporaryObject = this.imgPosition
         let temporaryId = picturesObjectArray[this.imgPosition + i].imgPosition
-        // TODO ZAMIENŃ
         Object.assign(picturesObjectArray[this.imgPosition], {
             status: "EMPTY",
             imgId: picturesObjectArray[this.imgPosition + i].imgId,
@@ -58,7 +56,6 @@ class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie
         // próbuję podmienić 
         let temporaryObject = this.imgPosition
         let temporaryId = picturesObjectArray[this.imgPosition + i].imgPosition
-        // TODO ZAMIENŃ 
         Object.assign(picturesObjectArray[this.imgPosition + i], {
             status: "EMPTY",
             imgId: temporaryObject
@@ -140,45 +137,28 @@ function buttonMaker() {
 
 
 }
-//funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
-function restarter() {
-    clearInterval(playInterval);
-    clearInterval(clockInterval)
-    gameTime = 0
-    lastMove = 5
-    clockImageSetter(["00", ":", "00", ":", "00", ":", "000"]);
-    picturesObjectArray = []
-    if (document.body.querySelector('.spookySlicer') != null)
-        document.body.querySelector('.spookySlicer').remove()
-    let spooksCont = document.createElement('div')
-    spooksCont.classList.add('spookySlicer')
-    document.body.appendChild(spooksCont)
-}
+
 // funckja wywołana, pozwala na acess po tzw I do ilość buttonó itp
 function buttonkoweSlicowanie(i) {
     return function () {
         restarter()
-        document.querySelector('.spookySlicer').appendChild(document.createElement('img'))
-        document.querySelector('.spookySlicer img').src = './Img/systemError.gif';
-        document.body.querySelector('.spooky_img').src = './Img/systemError.gif'; //ustawiam gify
-        setTimeout(restarter, 3200)
-        setTimeout(imageSlicer, 3200, i)
-        setTimeout(() => {
-            document.querySelector('.spookySlicer').addEventListener('click', moverRanomizer)
-            ilosc_poz = i;
-
-        }, 3200, i);
+        document.querySelector('.sliceContainer').appendChild(document.createElement('img'))
+        restarter(i)
+        imageSlicer(i)
+        document.querySelector('.sliceContainer').addEventListener('click', moverRanomizer);
+        ilosc_poz = i;
     }
 }
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
-    document.body.querySelector('.spooky_img').src = './Img/cyberPunkPhoto.jpg';
+    document.body.querySelector('.spooky_img').src = './Img/AmmongPhoto.jpg';
     let imageWidth = imageToSlice.width / i; // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let imageHeight = imageToSlice.height / i; // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let picturesCounter = 0
     //drawImage(zdjęcie , pozycja_wejściowego_X,pozycja_Wejściowego_Y,wejściowy_Width,WejściowyHeight,WyjściowyX,WyjściowyY,WyjścioweWidth,WyjścioweHeight)
     for (y = 0; y < i; y++) {
         for (x = 0; x < i; x++) {
+            //tworzneie canvasu
             let imageCanvas = document.createElement('canvas') // tworzę moje płutno ponieważ tylko na tym moge pracować
             imageCanvas.width = imageWidth; //nadaję dla canwasImagu
             imageCanvas.height = imageHeight //
@@ -196,10 +176,10 @@ function imageSlicer(i) {
                 contextOfSliceableImage.drawImage(imageToSlice, imageWidth * x, imageHeight * y, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
             }
             picturesCounter++;
-            document.querySelector('.spookySlicer').appendChild(imageCanvas)
+            document.querySelector('.sliceContainer').appendChild(imageCanvas)
         }
     }
-    let intervalCounter = i ** i
+    let intervalCounter = i * i * 10
     playInterval = setInterval(function () {
         intervalCounter--
         picturesObjectArray[picturesObjectArray.find(e => e.status == "EMPTY").imgPosition].whiteBoxMove(i)
@@ -209,7 +189,7 @@ function imageSlicer(i) {
             arrayIdTaker()
             clearInterval(playInterval)
         }
-    }, 1, b = i)
+    }, 1)
 }
 //ruch
 function moverRanomizer(e) {
@@ -290,19 +270,25 @@ function clockImageSetter(time) {
         document.body.querySelector('.time img:nth-child(' + (i + 1) + ')').src = imagePath;
     }
 }
+
 //wygrana 
 function winCheck() {
     let check = true;
     //TODO odkomentuj linike sprawdzenie zawsze działa !!!!!!!! 
-    // for (x = 0; x < picturesObjectArray.length; x++) {
-    //     if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
-    //         check = false
-    //         break;
-    //     }
-    // }
+    for (x = 0; x < picturesObjectArray.length; x++) {
+        if (document.body.querySelector('.sliceContainer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
+            check = false
+            break;
+        }
+    }
     if (check) {
+        //black background
+        let overLay = document.createElement('div')
+        overLay.classList.add('overLay');
+        document.body.appendChild(overLay)
+        //button
         clearInterval(clockInterval)
-        document.querySelector('.spookySlicer').removeEventListener('click', moverRanomizer)
+        document.querySelector('.sliceContainer').removeEventListener('click', moverRanomizer)
         let dvContainer = document.createElement('div')
         dvContainer.classList.add('alertClass')
         let noteContainer = document.createElement('h1')
@@ -310,9 +296,9 @@ function winCheck() {
         dvContainer.appendChild(noteContainer)
         let button = document.createElement('button')
         button.appendChild(document.createTextNode('OK'))
-        button.onclick = (dvContainer) => {
+        button.onclick = () => {
             document.body.querySelector('.alertClass').remove()
-            restarter()
+            document.body.querySelector('.overLay').remove()
         }
         let buttonShow = document.createElement('button')
         buttonShow.appendChild(document.createTextNode('Save'))
@@ -333,8 +319,8 @@ function winCheck() {
 
 // funckje zabezpieczające próbe zmiany id i oszustwa 
 function arrIdCheck() {
-    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
-        if (document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
+    for (x = 0; x < document.body.querySelector('.sliceContainer').childElementCount; x++) {
+        if (document.body.querySelector('.sliceContainer canvas:nth-child(' + (x + 1) + ')').id != picturesIdCheckArray[x]) {
             alert("Wykryto nieuczciwą zmienę ID, to bardzo NIE ŁADNE PODEJŚCIE. Strona teraz ma focha i się reloaduje. Nie pozdrawam.")
             window.location.reload(true)
             break;
@@ -344,8 +330,8 @@ function arrIdCheck() {
 
 function arrayIdTaker() {
     picturesIdCheckArray = []
-    for (x = 0; x < document.body.querySelector('.spookySlicer').childElementCount; x++) {
-        picturesIdCheckArray.push(document.body.querySelector('.spookySlicer canvas:nth-child(' + (x + 1) + ')').id)
+    for (x = 0; x < document.body.querySelector('.sliceContainer').childElementCount; x++) {
+        picturesIdCheckArray.push(document.body.querySelector('.sliceContainer canvas:nth-child(' + (x + 1) + ')').id)
     }
 }
 
@@ -374,16 +360,38 @@ function gameStarter() {
 
     // tworzę image slicera
     let slicer = document.createElement('div')
-    slicer.classList.add('spookySlicer')
-    slicer.appendChild(imagine)
+    slicer.classList.add('sliceContainer')
+    let imgForSlicer = document.createElement('img')
+    imgForSlicer.src = './Img/loadingScreen.gif';
+    slicer.appendChild(imgForSlicer)
 
     document.body.appendChild(imagine) // dodawanie obazka
+    document.body.appendChild(slicer)
     document.body.appendChild(timeCont)
     document.body.appendChild(buttonContainer)
-    document.body.appendChild(slicer)
+
     buttonMaker();
 
 }
+
+
+//funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
+function restarter() {
+    clearInterval(playInterval);
+    clearInterval(clockInterval)
+    gameTime = 0
+    lastMove = 5
+    clockImageSetter(["00", ":", "00", ":", "00", ":", "000"]);
+    picturesObjectArray = []
+    if (document.body.querySelector('.sliceContainer') != null)
+        document.body.querySelector('.sliceContainer').remove()
+    let spooksCont = document.createElement('div')
+    spooksCont.classList.add('sliceContainer')
+    document.body.appendChild(spooksCont)
+}
+
+
+
 //dla buttonu
 function Save() {
     document.body.innerHTML = '' // czyści body 
@@ -398,6 +406,7 @@ function Save() {
     status.appendChild(document.createTextNode('Enter Nickname'))
     //submit
     let submit = document.createElement('button')
+    submit.textContent = "Zapisz wynik"
     submit.onclick = () => {
         cookieMaker(textInput.value)
     }
@@ -425,21 +434,19 @@ function cookieMaker(nick) { //TODO dodaj 2 zabezpieczenie
         text.textContent = "Twój nick został zapisany poprawnie"
         let exitBty = document.createElement('button')
         let okButton = document.createElement('button')
-        exitBty.textContent = "Pokaż tabele wyników"
-        exitBty.onclick = () => {}
-        okButton.textContent = "Ok"
-        okButton.onclick = () => {
-            gameStarter()
-        }
+        exitBty.textContent = "Wyniki"
+        exitBty.onclick = displayResults;
+        okButton.textContent = "Menu główne"
+        okButton.onclick = gameStarter;
         container
-            .appendChild(text)
-            .appendChild(okButton)
-            .appendChild(exitBty)
+        container.appendChild(text)
+        container.appendChild(okButton)
+        container.appendChild(exitBty)
     } else {
         alert("Nie można zapisać takich danych")
     }
 }
-
+//zwraca który cookie ma pobrać funckcja 
 function gameTypeForCookieId() {
     switch (ilosc_poz) {
         case 3:
@@ -489,8 +496,6 @@ function cookieToJSONMaker() {
     }
     return found
 }
-
-
 //pokazywanie wyników - tworzy wybów przycisków == wybór trybów gry 
 function displayResults() {
     clearInterval(playInterval);
@@ -582,10 +587,13 @@ function sorterArrayMaker() {
     let buttonRestartGame = document.createElement('button')
     buttonRestartGame.textContent = "Pokaż wyniki"
     buttonRestartGame.onclick = displayResults;
-
+    //na to container
+    let container = document.createElement('div')
+    container.classList.add('resultsContainer')
 
 
     document.body.appendChild(table)
-    document.body.appendChild(buttonNewGame)
-    document.body.appendChild(buttonRestartGame)
+    container.appendChild(buttonNewGame)
+    container.appendChild(buttonRestartGame)
+    document.body.appendChild(container)
 }
