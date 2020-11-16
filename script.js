@@ -145,7 +145,6 @@ function buttonkoweSlicowanie(i) {
         document.querySelector('.sliceContainer').appendChild(document.createElement('img'))
         restarter(i)
         imageSlicer(i)
-        document.querySelector('.sliceContainer').addEventListener('click', moverRanomizer);
         ilosc_poz = i;
     }
 }
@@ -188,6 +187,7 @@ function imageSlicer(i) {
             clockInterval = setInterval(clock, 1)
             arrayIdTaker()
             clearInterval(playInterval)
+            document.querySelector('.sliceContainer').addEventListener('click', moverRanomizer);
         }
     }, 1)
 }
