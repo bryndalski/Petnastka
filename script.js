@@ -1,10 +1,13 @@
 let ilosc_poz = 0,
     picturesIdCheckArray = [],
     playInterval, clockInterval, gameTime = 0,
-    lastMove = 5;
+    lastMove = 5,
+    whichImg = 0;
 const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
-imageToSlice.src = './Img/AmmongPhoto.jpg' //nadaje mu nowy src
+const imageSourceArray = ['./Img/AmmongPhoto.jpg', './Img/AmmongPhoto2.jpg', './Img/AmmongPhoto3.jpg', './Img/AmmongPhoto4.jpg']
+//nadaje mu nowy src
+
 class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie 
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -137,7 +140,6 @@ function buttonMaker() {
 
 
 }
-
 // funckja wywołana, pozwala na acess po tzw I do ilość buttonó itp
 function buttonkoweSlicowanie(i) {
     return function () {
@@ -150,7 +152,7 @@ function buttonkoweSlicowanie(i) {
 }
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
-    document.body.querySelector('.spooky_img').src = './Img/AmmongPhoto.jpg';
+
     let imageWidth = imageToSlice.width / i; // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let imageHeight = imageToSlice.height / i; // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let picturesCounter = 0
@@ -339,10 +341,25 @@ function arrayIdTaker() {
 // formularz do wprowadzania nicku
 function gameStarter() {
     document.body.innerHTML = '' // czyści body 
-    //towrzę img 
-    let imagine = document.createElement('img');
+    //towrzę slider 
+    let imagine = document.createElement('div');
+    //buttony 
+    let arrowLeft = document.createElement('button')
+    let arrowRight = document.createElement('button')
+    arrowLeft.textContent = "<"
+    arrowLeft.classList.add('leftArrow')
+    arrowRight.classList.add('rightArrow')
+    arrowRight.textContent = '>'
+
+    imagine.appendChild(arrowLeft)
+    imagine.appendChild(arrowRight)
+    arrowRight.onclick = () => {
+        slideShow(true)
+    }
+    arrowLeft.onclick = () => {
+        slideShow(false)
+    }
     imagine.classList.add('spooky_img')
-    imagine.src = './Img/loadingScreen.gif';
     //tworzę container z czasem
     let timeCont = document.createElement('div');
     timeCont.classList.add('time')
@@ -369,12 +386,28 @@ function gameStarter() {
     document.body.appendChild(slicer)
     document.body.appendChild(timeCont)
     document.body.appendChild(buttonContainer)
+    document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
 
     buttonMaker();
 
 }
 
+function slideShow(direction) {
 
+    if (direction)
+        whichImg++
+    else
+        whichImg--
+
+    if (whichImg == imageSourceArray.length) {
+        whichImg = 0;
+    } else if (whichImg < 0) {
+        whichImg = imageSourceArray.length - 1;
+    }
+    imageToSlice.src = imageSourceArray[whichImg]
+    document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
+
+}
 //funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
 function restarter() {
     clearInterval(playInterval);
@@ -389,9 +422,6 @@ function restarter() {
     spooksCont.classList.add('sliceContainer')
     document.body.appendChild(spooksCont)
 }
-
-
-
 //dla buttonu
 function Save() {
     document.body.innerHTML = '' // czyści body 

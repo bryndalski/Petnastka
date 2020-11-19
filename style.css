@@ -58,7 +58,49 @@ body * {
 }
 
 .spooky_img {
+  background-size: 100% 100%;
   border: solid 5px white;
+  -webkit-transition: background-image 0.5s linear;
+  -moz-transition: background-image 0.5s linear;
+  -o-transition: background-image 0.5s linear;
+  transition: background-image 0.5s linear;
+}
+.spooky_img button {
+  display: inline-block;
+  text-align: center;
+  border: solid 1px white;
+  color: white;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0);
+  transition: all ease-in-out 0.5s;
+}
+.spooky_img button:hover {
+  color: black;
+  background-color: white;
+  cursor: pointer;
+}
+.spooky_img button {
+  background-color: black;
+}
+
+.rightArrow {
+  position: relative;
+  top: 50%;
+  left: 70%;
+  width: 10%;
+  height: 10%;
+  font-size: 10pt;
+  z-index: 3;
+}
+
+.leftArrow {
+  position: relative;
+  top: 50%;
+  left: 10%;
+  width: 10%;
+  height: 10%;
+  font-size: 10pt;
+  z-index: 3;
 }
 
 .sliceContainer {
@@ -227,7 +269,7 @@ table tr {
 }
 
 .empty {
-  background-color: #00ffee88 !important;
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 
 @media screen and (max-width: 900px) {
@@ -243,6 +285,7 @@ table tr {
     display: block;
     margin: 0 auto;
     width: 50vw;
+    height: 50vw;
   }
 
   .buttonContainer {
