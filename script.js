@@ -5,7 +5,7 @@ let ilosc_poz = 0,
     whichImg = 0;
 const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
-const imageSourceArray = ['./Img/AmmongPhoto.jpg', './Img/AmmongPhoto2.jpg', './Img/AmmongPhoto3.jpg', './Img/AmmongPhoto4.jpg']
+const imageSourceArray = ['./Img/AmmongPhoto.jpg', './Img/AmmongPhoto2.jpg', './Img/AmmongPhoto3.jpg']
 //nadaje mu nowy src
 class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
@@ -55,7 +55,9 @@ class pictureStatistic {
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%";
         document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"
         //podmmieniam indexy 
+        
         // próbuję podmienić 
+        //TODO dodaj tu interwał na zmiane top/left
         let temporaryObject = this.imgPosition
         let temporaryId = picturesObjectArray[this.imgPosition + i].imgPosition
         Object.assign(picturesObjectArray[this.imgPosition + i], {
@@ -136,7 +138,16 @@ function buttonMaker() {
     buttonek.appendChild(document.createTextNode("Pokaż wyniki"))
     buttonek.onclick = displayResults;
     buttonContainer.appendChild(buttonek)
-
+    let arrowLeft = document.createElement('button')
+    let arrowRight = document.createElement('button')
+    arrowLeft.textContent = "<"
+    arrowLeft.classList.add('leftArrow')
+    arrowRight.classList.add('rightArrow')
+    arrowRight.textContent = '>'
+    buttonContainer.appendChild(arrowLeft)
+    buttonContainer.appendChild(arrowRight)
+    arrowRight.addEventListener('click', slideUp)
+    arrowLeft.addEventListener('click', slideShowDown)
 
 }
 // funckja wywołana, pozwala na acess po tzw I do ilość buttonó itp
@@ -341,22 +352,10 @@ function gameStarter() {
     document.body.innerHTML = '' // czyści body 
     //towrzę slider 
     let imagine = document.createElement('div');
-    //buttony 
-    let arrowLeft = document.createElement('button')
-    let arrowRight = document.createElement('button')
-    arrowLeft.textContent = "<"
-    arrowLeft.classList.add('leftArrow')
-    arrowRight.classList.add('rightArrow')
-    arrowRight.textContent = '>'
-
-    imagine.appendChild(arrowLeft)
-    imagine.appendChild(arrowRight)
-    arrowRight.onclick = () => {
-        slideShow(true)
-    }
-    arrowLeft.onclick = () => {
-        slideShow(false)
-    }
+    //slider img
+    let slideImagine = document.createElement('img')
+    slideImagine.src = imageSourceArray[0]
+    imagine.appendChild(slideImagine)
     imagine.classList.add('spooky_img')
     //tworzę container z czasem
     let timeCont = document.createElement('div');
@@ -379,34 +378,85 @@ function gameStarter() {
     let imgForSlicer = document.createElement('img')
     imgForSlicer.src = './Img/loadingScreen.gif';
     slicer.appendChild(imgForSlicer)
-
     document.body.appendChild(imagine) // dodawanie obazka
     document.body.appendChild(slicer)
     document.body.appendChild(timeCont)
     document.body.appendChild(buttonContainer)
-    document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
-    imageToSlice.src = imageSourceArray[whichImg]
+
 
     buttonMaker();
-
-}
-
-function slideShow(direction) {
-
-    if (direction)
-        whichImg++
-    else
-        whichImg--
-
-    if (whichImg == imageSourceArray.length)
-        whichImg = 0;
-    else if (whichImg < 0)
-        whichImg = imageSourceArray.length - 1;
-
     imageToSlice.src = imageSourceArray[whichImg]
-    document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
+
 
 }
+
+function slideUp() {
+    //wyłączam buttony 
+    document.body.querySelector('.leftArrow').removeEventListener('click', slideShowDown)
+    document.body.querySelector('.rightArrow').removeEventListener('click', slideUp)
+
+    whichImg++
+    if (whichImg == imageSourceArray.length) //ide do przodu 
+        whichImg = 0;
+    else if (whichImg < 0) // cofam
+        whichImg = imageSourceArray.length - 1;
+    // przesuwam do prawej 
+    let slideImagine = document.createElement('img')
+    slideImagine.src = imageSourceArray[whichImg] // src nadane
+    slideImagine.setAttribute('position', 'absolute')
+    document.querySelector('.spooky_img').appendChild(slideImagine)
+    let destination = 0;
+    let interwal = setInterval(() => {
+        destination++;
+        document.querySelector('.spooky_img :first-child').style.left = -1 * destination + "%"
+        document.querySelector('.spooky_img :nth-child(2)').style.left = -1 * destination + "%"
+        if (destination == 100) {
+            clearInterval(interwal)
+            document.querySelector('.spooky_img :first-child').remove()
+            document.querySelector('.spooky_img :first-child').style.left = 0 + "px"
+            document.body.querySelector('.leftArrow').addEventListener('click', slideShowDown)
+            document.body.querySelector('.rightArrow').addEventListener('click', slideUp)
+
+        }
+        document.querySelector('.spooky_img').scroll(1, 0)
+    }, 3);
+
+    imageToSlice.src = imageSourceArray[whichImg] // ustawia courrent slice img
+
+}
+
+function slideShowDown() {
+    //wyłączam buttony 
+    document.body.querySelector('.leftArrow').removeEventListener('click', slideShowDown)
+    document.body.querySelector('.rightArrow').removeEventListener('click', slideUp)
+    whichImg--
+    if (whichImg == imageSourceArray.length) //ide do przodu 
+        whichImg = 0;
+    else if (whichImg < 0) // cofam
+        whichImg = imageSourceArray.length - 1;
+    let slideImagine = document.createElement('img')
+    slideImagine.src = imageSourceArray[whichImg] // src nadane
+    slideImagine.setAttribute('position', 'absolute')
+    slideImagine.style.left = '-100%'
+    document.querySelector('.spooky_img').prepend(slideImagine)
+    let destination = 0;
+    let interwal = setInterval(() => {
+        destination++;
+        document.querySelector('.spooky_img :first-child').style.left = -1 * (100 - destination) + "%"
+        document.querySelector('.spooky_img :nth-child(2)').style.left = -1 * (100 - destination) + "%"
+        if (destination == 100) {
+            clearInterval(interwal)
+            document.querySelector('.spooky_img :nth-child(2)').remove()
+            document.querySelector('.spooky_img :first-child').style.left = 0 + "px"
+            document.body.querySelector('.leftArrow').addEventListener('click', slideShowDown)
+            document.body.querySelector('.rightArrow').addEventListener('click', slideUp)
+        }
+        document.querySelector('.spooky_img').scroll(1, 0)
+    }, 3);
+    imageToSlice.src = imageSourceArray[whichImg] // ustawia courrent slice img
+
+}
+
 //funckaj restartuje gre : czyści tablice usuwa container ==> dzieci i tworzy na nowo
 function restarter() {
     clearInterval(playInterval);
