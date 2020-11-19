@@ -7,7 +7,7 @@ const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
 const imageSourceArray = ['./Img/AmmongPhoto.jpg', './Img/AmmongPhoto2.jpg', './Img/AmmongPhoto3.jpg', './Img/AmmongPhoto4.jpg']
 //nadaje mu nowy src
-class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie 
+class pictureStatistic {
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
         this.imgX = imgX;
@@ -275,7 +275,6 @@ function clockImageSetter(time) {
 //wygrana 
 function winCheck() {
     let check = true;
-    //TODO odkomentuj linike sprawdzenie zawsze działa !!!!!!!! 
     for (x = 0; x < picturesObjectArray.length; x++) {
         if (document.body.querySelector('.sliceContainer canvas:nth-child(' + (x + 1) + ')').id != picturesObjectArray[x].imgPosition) {
             check = false
@@ -447,7 +446,7 @@ function Save() {
     textInput.addEventListener('input', nickNamePossibilityChecker)
 }
 
-function cookieMaker(nick) { //TODO dodaj 2 zabezpieczenie 
+function cookieMaker(nick) {
     let cookieContent = cookieToJSONMaker(gameTypeForCookieId())
     if (nickNamePossibilityChecker()) {
         let cookieObject = {
