@@ -7,7 +7,6 @@ const imageToSlice = new Image() //tworze nowe img
 const patternForInputs = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/ // pattern dla RegExpa zawierający wszyskie znaki specjalne. nie pozwoli na użycie ich w inpucie 
 const imageSourceArray = ['./Img/AmmongPhoto.jpg', './Img/AmmongPhoto2.jpg', './Img/AmmongPhoto3.jpg', './Img/AmmongPhoto4.jpg']
 //nadaje mu nowy src
-
 class pictureStatistic { //TODO sprawdź potrzebe IMGID w obiekcie 
     constructor(status, imgX, imgY, picturesCounter) {
         this.status = status;
@@ -387,6 +386,7 @@ function gameStarter() {
     document.body.appendChild(timeCont)
     document.body.appendChild(buttonContainer)
     document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
+    imageToSlice.src = imageSourceArray[whichImg]
 
     buttonMaker();
 
