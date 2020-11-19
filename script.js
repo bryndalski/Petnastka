@@ -399,11 +399,11 @@ function slideShow(direction) {
     else
         whichImg--
 
-    if (whichImg == imageSourceArray.length) {
+    if (whichImg == imageSourceArray.length)
         whichImg = 0;
-    } else if (whichImg < 0) {
+    else if (whichImg < 0)
         whichImg = imageSourceArray.length - 1;
-    }
+
     imageToSlice.src = imageSourceArray[whichImg]
     document.body.querySelector('.spooky_img').style.backgroundImage = "url(" + imageSourceArray[whichImg] + ")"
 
