@@ -28,38 +28,16 @@ class pictureStatistic {
         return 0;
     }
     moveMaker(i) {
-        document.querySelector('.sliceContainer').removeEventListener('click', moverRanomizer);
         let vectorForLeft = picturesObjectArray[this.imgPosition + i].imgX - picturesObjectArray[this.imgPosition].imgX
         let vectorForTop = picturesObjectArray[this.imgPosition + i].imgY - picturesObjectArray[this.imgPosition].imgY
-        let intCounter = 0;
-        let moveInterval = setInterval(() => {
-            intCounter++;
-            if (vectorForLeft > 0) {
-                document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = (picturesObjectArray[this.imgPosition].imgX + intCounter) + '%'
-                document.getElementById(this.imgPosition).style.left = (picturesObjectArray[this.imgPosition + i].imgX - intCounter) + '%'
-            } else if (vectorForLeft < 0) {
-                document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = (picturesObjectArray[this.imgPosition].imgX - intCounter) + '%'
-                document.getElementById(this.imgPosition).style.left = (picturesObjectArray[this.imgPosition + i].imgX + intCounter) + '%'
-            } else if (vectorForTop > 0) {
-                document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = (picturesObjectArray[this.imgPosition].imgY + intCounter) + '%'
-                document.getElementById(this.imgPosition).style.top = (picturesObjectArray[this.imgPosition + i].imgY - intCounter) + '%'
-            } else {
-                document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = (picturesObjectArray[this.imgPosition].imgY - intCounter) + '%'
-                document.getElementById(this.imgPosition).style.top = (picturesObjectArray[this.imgPosition + i].imgY + intCounter) + '%'
-            }
-            if (intCounter == Math.floor(100 / ilosc_poz)) {
-                clearInterval(moveInterval)
-                document.querySelector('.sliceContainer').addEventListener('click', moverRanomizer);
-            }
-        }, 1);
+        console.log()
+
+        document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "%" // nadanie dla kliknietego
+        document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "%"
 
 
-        // document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "%" // nadanie dla kliknietego
-        // document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "%"
-
-
-        // document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%"; // nadanie dla czarnego
-        // document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"
+        document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%"; // nadanie dla czarnego
+        document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"
         //podmmieniam indexy 
         // próbuję podmienić 
         let temporaryObject = this.imgPosition
@@ -191,8 +169,8 @@ function buttonkoweSlicowanie(i) {
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
 
-    let imageWidth = Math.floor(imageToSlice.width / i); // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
-    let imageHeight = Math.floor(imageToSlice.height / i); // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
+    let imageWidth = imageToSlice.width / i; // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
+    let imageHeight = imageToSlice.height / i; // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let picturesCounter = 0
     //drawImage(zdjęcie , pozycja_wejściowego_X,pozycja_Wejściowego_Y,wejściowy_Width,WejściowyHeight,WyjściowyX,WyjściowyY,WyjścioweWidth,WyjścioweHeight)
     for (y = 0; y < i; y++) {
@@ -207,7 +185,7 @@ function imageSlicer(i) {
             imageCanvas.classList.add('canvasNumber' + i) // nadaję specjalną klasę stworzoną pod responwyność 
             let contextOfSliceableImage = imageCanvas.getContext('2d') //pobieram kontekst z płótna
             if (picturesCounter == i ** 2 - 1) {
-                picturesObjectArray.push(new pictureStatistic("EMPTY", Math.floor(((100 / i) * x)), Math.floor(((100 / i) * y)), picturesCounter))
+                picturesObjectArray.push(new pictureStatistic("EMPTY", ((100 / i) * x), ((100 / i) * y), picturesCounter))
                 imageCanvas.classList.add("empty")
             }
             if (picturesCounter < i ** 2 - 1) {
@@ -233,7 +211,7 @@ function imageSlicer(i) {
 }
 //ruch
 function moverRanomizer(e) {
-    // arrIdCheck() !!!!RUSZ MNIE //TODO JEJEJEJEJ
+    arrIdCheck()
     if (picturesObjectArray[e.target.id] != null)
         picturesObjectArray[e.target.id].move(ilosc_poz)
 }
