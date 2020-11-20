@@ -1,11 +1,7 @@
 @use 'sass:math';
 
-
-
 @function sizeCounter($elements) {
     $size: 100 / $elements;
-    // $roundedSize:
-
     @return math.floor($size);
 }
 
@@ -130,6 +126,7 @@ canvas {
 .canvasNumber3 {
     width: sizeCounter(3)*1%;
     height: sizeCounter(3)*1%;
+    margin: 0.6%;
 }
 
 .canvasNumber4 {
