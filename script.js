@@ -34,7 +34,6 @@ class pictureStatistic {
         let moveInterval = setInterval(() => {
             intCounter++;
             console.log(intCounter, )
-            console.log("cokolwiek?")
             if (vectorForLeft > 0) {
                 document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = (picturesObjectArray[this.imgPosition].imgX + intCounter) + '%'
                 document.getElementById(this.imgPosition).style.left = (picturesObjectArray[this.imgPosition + i].imgX - intCounter) + '%'
@@ -186,7 +185,6 @@ function buttonkoweSlicowanie(i) {
 }
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
-
     let imageWidth = Math.round(imageToSlice.width / i); // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let imageHeight = Math.floor(imageToSlice.height / i); // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let picturesCounter = 0
@@ -322,24 +320,19 @@ function winCheck() {
         }
     }
     if (check) {
+        document.querySelector('.sliceContainer').removeEventListener('click', moverRanomizer);
         //black background
         let overLay = document.createElement('div')
         overLay.classList.add('overLay');
         document.body.appendChild(overLay)
         //button
         clearInterval(clockInterval)
-        document.querySelector('.sliceContainer').removeEventListener('click', moverRanomizer)
         let dvContainer = document.createElement('div')
         dvContainer.classList.add('alertClass')
         let noteContainer = document.createElement('h1')
         noteContainer.appendChild(document.createTextNode("Your Time  " + gameTime))
         dvContainer.appendChild(noteContainer)
-        let button = document.createElement('button')
-        button.appendChild(document.createTextNode('OK'))
-        button.onclick = () => {
-            document.body.querySelector('.alertClass').remove()
-            document.body.querySelector('.overLay').remove()
-        }
+
         let buttonShow = document.createElement('button')
         buttonShow.appendChild(document.createTextNode('Save'))
         buttonShow.onclick = function () {
@@ -351,7 +344,6 @@ function winCheck() {
             displayResults()
         }
         dvContainer.appendChild(buttonStats)
-        dvContainer.appendChild(button)
         dvContainer.appendChild(buttonShow)
         document.body.appendChild(dvContainer)
     }
