@@ -15,7 +15,6 @@ class pictureStatistic {
         this.imgId = picturesCounter;
         this.imgPosition = picturesCounter;
     }
-    //WSTAW PARAMY
     possibilities(i) {
         if (picturesObjectArray[this.imgPosition - 1] != undefined && picturesObjectArray[this.imgPosition - 1].status == "EMPTY" && (this.imgPosition - 1) % i != (i - 1)) // lewo && (this.imgPosition-1)%i != 0 
             return 1;
@@ -34,6 +33,8 @@ class pictureStatistic {
         let intCounter = 0;
         let moveInterval = setInterval(() => {
             intCounter++;
+            console.log(intCounter, )
+            console.log("cokolwiek?")
             if (vectorForLeft > 0) {
                 document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = (picturesObjectArray[this.imgPosition].imgX + intCounter) + '%'
                 document.getElementById(this.imgPosition).style.left = (picturesObjectArray[this.imgPosition + i].imgX - intCounter) + '%'
@@ -52,12 +53,8 @@ class pictureStatistic {
                 document.querySelector('.sliceContainer').addEventListener('click', moverRanomizer);
             }
         }, 1);
-
-
         // document.getElementById(this.imgPosition).style.left = picturesObjectArray[this.imgPosition + i].imgX + "%" // nadanie dla kliknietego
         // document.getElementById(this.imgPosition).style.top = picturesObjectArray[this.imgPosition + i].imgY + "%"
-
-
         // document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.left = picturesObjectArray[this.imgPosition].imgX + "%"; // nadanie dla czarnego
         // document.getElementById(picturesObjectArray[this.imgPosition + i].imgPosition).style.top = picturesObjectArray[this.imgPosition].imgY + "%"
         //podmmieniam indexy 
@@ -85,7 +82,6 @@ class pictureStatistic {
         //podmmieniam indexy 
 
         // próbuję podmienić 
-        //TODO dodaj tu interwał na zmiane top/left
         let temporaryObject = this.imgPosition
         let temporaryId = picturesObjectArray[this.imgPosition + i].imgPosition
         Object.assign(picturesObjectArray[this.imgPosition + i], {
@@ -191,7 +187,7 @@ function buttonkoweSlicowanie(i) {
 //funckja robiąca kwadrary 
 function imageSlicer(i) {
 
-    let imageWidth = Math.floor(imageToSlice.width / i); // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
+    let imageWidth = Math.round(imageToSlice.width / i); // pobieram width zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let imageHeight = Math.floor(imageToSlice.height / i); // pobieram height zdjęcia i dziele je przez ilość obrazków w celu uzyskania wiadomości ile jest potrzebne
     let picturesCounter = 0
     //drawImage(zdjęcie , pozycja_wejściowego_X,pozycja_Wejściowego_Y,wejściowy_Width,WejściowyHeight,WyjściowyX,WyjściowyY,WyjścioweWidth,WyjścioweHeight)
@@ -202,16 +198,21 @@ function imageSlicer(i) {
             imageCanvas.width = imageWidth; //nadaję dla canwasImagu
             imageCanvas.height = imageHeight //
             imageCanvas.id = picturesCounter; // nadaje id dla canvasu
-            imageCanvas.style.top = Math.floor(((100 / i) * y)) + "%" // ustawiam bezwzględną pozycje względem topa
-            imageCanvas.style.left = Math.floor(((100 / i) * x)) + "%" // ustawiam bezwzględną pozycję wg left
+            let size = 100;
+            if (i == 6) {
+                size -= 3
+            }
+            imageCanvas.style.top = Math.floor(((size / i) * y)) + "%" // ustawiam bezwzględną pozycje względem topa
+            imageCanvas.style.left = Math.floor(((size / i) * x)) + "%" // ustawiam bezwzględną pozycję wg left
             imageCanvas.classList.add('canvasNumber' + i) // nadaję specjalną klasę stworzoną pod responwyność 
             let contextOfSliceableImage = imageCanvas.getContext('2d') //pobieram kontekst z płótna
             if (picturesCounter == i ** 2 - 1) {
-                picturesObjectArray.push(new pictureStatistic("EMPTY", Math.floor(((100 / i) * x)), Math.floor(((100 / i) * y)), picturesCounter))
+                picturesObjectArray.push(new pictureStatistic("EMPTY", Math.floor(((size / i) * x)), Math.floor(((size / i) * y)), picturesCounter))
                 imageCanvas.classList.add("empty")
             }
             if (picturesCounter < i ** 2 - 1) {
-                picturesObjectArray.push(new pictureStatistic("containsImagine", Math.floor(((100 / i) * x)), Math.floor(((100 / i) * y)), picturesCounter))
+                console.log(Math.floor(((100 / i) * x)), Math.floor(((100 / i) * y)))
+                picturesObjectArray.push(new pictureStatistic("containsImagine", Math.floor(((size / i) * x)), Math.floor(((size / i) * y)), picturesCounter))
                 contextOfSliceableImage.drawImage(imageToSlice, imageWidth * x, imageHeight * y, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight)
             }
             picturesCounter++;
@@ -233,7 +234,7 @@ function imageSlicer(i) {
 }
 //ruch
 function moverRanomizer(e) {
-    // arrIdCheck() !!!!RUSZ MNIE //TODO JEJEJEJEJ
+    arrIdCheck()
     if (picturesObjectArray[e.target.id] != null)
         picturesObjectArray[e.target.id].move(ilosc_poz)
 }

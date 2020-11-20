@@ -1,6 +1,12 @@
-@mixin widthAndHeight($wt) {
-    width: calc(100% / $wt);
-    height: calc(100% / $wt);
+@use 'sass:math';
+
+
+
+@function sizeCounter($elements) {
+    $size: 100 / $elements;
+    // $roundedSize:
+
+    @return math.floor($size);
 }
 
 @mixin buttonStyle {
@@ -122,8 +128,8 @@ canvas {
 }
 
 .canvasNumber3 {
-    width: calc(100% / 3);
-    height: calc(100% / 3);
+    width: sizeCounter(3)*1%;
+    height: sizeCounter(3)*1%;
 }
 
 .canvasNumber4 {
@@ -137,8 +143,9 @@ canvas {
 }
 
 .canvasNumber6 {
-    width: calc(100% / 6);
-    height: calc(100% / 6);
+    margin: 2.5%;
+    width: sizeCounter(6)*1%;
+    height: sizeCounter(6)*1%;
 }
 
 //wyniki 
